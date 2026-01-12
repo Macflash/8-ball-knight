@@ -14,7 +14,7 @@ import {
   angleFromAtoB,
 } from "./balls";
 import { getLevel } from "./levels/levels";
-import { playBallDrop } from "./sounds/audio";
+import { playBallDrop, playCueTurn, playgoblinTurn } from "./sounds/audio";
 
 function App() {
   const [level, setLevel] = React.useState(0);
@@ -60,8 +60,13 @@ function App() {
       activeMonster.active = false;
       activeMonster.attacking = true;
 
-      if (nextMonster?.monster) nextMonster.active = true;
-      else if (cueball.hp > 0) cueball.active = true;
+      if (nextMonster?.monster) {
+        nextMonster.active = true;
+        playgoblinTurn();
+      } else if (cueball.hp > 0) {
+        cueball.active = true;
+        playCueTurn();
+      }
     }
 
     console.log("setting timeout...");

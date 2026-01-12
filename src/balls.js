@@ -1,6 +1,8 @@
 import {
   playBallHit,
   playBumper,
+  playCueHurt,
+  playgoblinHurt,
   playPocket,
   playScratch,
 } from "./sounds/audio";
@@ -49,11 +51,16 @@ export function moveBalls(balls) {
     // could depend on the spin, etc if we wanna get fancy later.
     let bumped = false;
     if (ball.x > width - BALL_RADIUS || ball.x < BALL_RADIUS) {
+      // TODO: oh dude fix the overlap!
       ball.vx *= -1;
+      ball.x = Math.max(0, ball.x);
+      ball.x = Math.min(width - BALL_RADIUS, ball.x);
       bumped |= Math.abs(ball.vx) > 0.1;
     }
     if (ball.y > height - BALL_RADIUS || ball.y < BALL_RADIUS) {
       ball.vy *= -1;
+      ball.y = Math.max(0, ball.y);
+      ball.y = Math.min(height - BALL_RADIUS, ball.y);
       bumped |= Math.abs(ball.vy) > 0.1;
     }
     if (bumped) playBumper();
@@ -116,8 +123,12 @@ export function moveBalls(balls) {
         // DAMAGE! (monsters don't hurt each other!)
         if (ballA.monster !== ballB.monster) {
           if (ballA.attacking) {
+            if (ballB.cue) playCueHurt();
+            else playgoblinHurt();
             ballB.hp -= ballA.attack;
           } else if (ballB.attacking) {
+            if (ballA.cue) playCueHurt();
+            else playgoblinHurt();
             ballA.hp -= ballB.attack;
           }
         }

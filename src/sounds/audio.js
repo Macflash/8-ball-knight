@@ -4,6 +4,15 @@ import bumper from "./bumper4.mp3";
 import pocket from "./pocket2.mp3";
 import scratch from "./scratchplunk.mp3";
 
+import cueturn from "./cueturn.mp3";
+import cuehurt from "./cuehurt.mp3";
+
+import goblinturn from "./goblinturn.mp3";
+import goblinhurt from "./goblinhurt.mp3";
+
+import orcturn from "./orcturn.mp3";
+import orchurt from "./orchurt.mp3";
+
 const max = 10;
 const audioEls = [];
 
@@ -41,4 +50,25 @@ export function playPocket() {
 
 export function playScratch() {
   play(scratch);
+}
+
+export function playCueTurn() {
+  play(cueturn);
+}
+export function playCueHurt() {
+  play(cuehurt);
+}
+
+export function playgoblinTurn() {
+  play(goblinturn);
+}
+export function playgoblinHurt() {
+  play(goblinhurt);
+}
+
+export function playorcTurn() {
+  play(orcturn);
+}
+export function playorcHurt() {
+  play(orchurt);
 }

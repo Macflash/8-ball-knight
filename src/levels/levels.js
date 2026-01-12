@@ -32,4 +32,14 @@ const levels = [
     { ...goblin, x: (width * 3) / 4, y: 100 },
     ...blockPockets([]),
   ],
+
+  () => [
+    { ...goblin, x: width / 2, y: 200 },
+    { ...goblin, x: width / 3, y: 150 },
+    { ...goblin, x: (width * 2) / 3, y: 150 },
+    { ...goblin, x: width / 4, y: 100 },
+    { ...goblin, x: width / 2, y: 100 },
+    { ...goblin, x: (width * 3) / 4, y: 100 },
+    ...blockPockets([4, 5]),
+  ],
 ];
