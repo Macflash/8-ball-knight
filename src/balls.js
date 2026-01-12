@@ -24,6 +24,8 @@ export function moveBalls(balls) {
     if (ball.hole || ball.hp <= 0) return ball;
 
     // wall bounces
+    // could change this to take some of the other direction off too
+    // could depend on the spin, etc if we wanna get fancy later.
     if (ball.x > width - BALL_RADIUS || ball.x < BALL_RADIUS) {
       ball.vx *= -1;
     }

@@ -9,10 +9,8 @@ import { moveBalls, BALL_RADIUS, height, width, magnitude } from "./balls";
 import { getLevel } from "./levels/levels";
 
 function App() {
-  const [level, setLevel] = React.useState(2);
+  const [level, setLevel] = React.useState(0);
   const [balls, setBalls] = React.useState(getLevel(level));
-
-  console.log("level", balls);
 
   const moving = balls.some((ball) => magnitude(ball) > 0);
   const cueball = balls.find((ball) => ball.cue);
@@ -27,13 +25,18 @@ function App() {
 
   // Move balls
   React.useEffect(() => {
-    setTimeout(() => {
+    let valid = true;
+    requestAnimationFrame(() => {
+      if (!valid) return;
       setBalls(moveBalls);
-    }, 10);
+    });
+    return () => (valid = false);
   }, [moving, balls]);
 
   // Aim and move enemies when it is their turn
   React.useEffect(() => {
+    let valid = true;
+
     if (moving) return;
     if (!activeMonster) return;
 
@@ -53,6 +56,8 @@ function App() {
     console.log("setting timeout...");
 
     setTimeout(() => {
+      if (!valid) return;
+      if (won || lost) return;
       if (activeMonster.hp > 0) {
         console.log("attack!");
         const dx = cueball.x - activeMonster.x;
@@ -75,6 +80,7 @@ function App() {
       else if (cueball.hp > 0) cueball.active = true;
       setBalls([...balls]);
     }, 1500);
+    return () => (valid = false);
   }, [activeMonster, moving]);
 
   // stop attacks
@@ -163,11 +169,11 @@ function App() {
                 src={
                   (ball.cue && won ? ball.imgs.happy : null) ||
                   (ball.monster && lost ? ball.imgs.happy : null) ||
-                  (ball.hp < 0.5 * ball.maxhp ? ball.imgs.hurt : null) ||
                   ((ball.vx || ball.vy) &&
                     ball.attacking &&
                     ball.imgs.attack) ||
                   ((ball.vx || ball.vy) && ball.imgs.surprised) ||
+                  (ball.hp < 0.5 * ball.maxhp ? ball.imgs.hurt : null) ||
                   ball.imgs.normal
                 }
                 height={BALL_RADIUS * 2.5}
@@ -220,6 +226,7 @@ function App() {
               onClick={() => {
                 setLevel(level + 1);
                 setBalls(getLevel(level + 1));
+                setDir(0);
               }}
             >
               Next level
@@ -232,9 +239,28 @@ function App() {
         <div style={{ position: "absolute", color: "red", fontSize: 100 }}>
           GAME OVER!
           <br />
-          <button>New game?</button>
+          <button
+            onClick={() => {
+              setLevel(0);
+              setBalls(getLevel(0));
+              setDir(0);
+            }}
+          >
+            New game?
+          </button>
         </div>
       ) : null}
+
+      <div
+        style={{
+          position: "absolute",
+          top: 0,
+          color: "white",
+          fontSize: "2rem",
+        }}
+      >
+        Level {level + 1}
+      </div>
     </div>
   );
 }
