@@ -14,7 +14,7 @@ const pocket = {
   y: 0,
 };
 
-export const pockets = [
+export const pockets = () => [
   // Pockets
   { ...pocket, x: 0, y: 0 },
   { ...pocket, x: width, y: 0 },
@@ -22,7 +22,6 @@ export const pockets = [
     ...pocket,
     x: -0.75 * BALL_RADIUS,
     y: 0.5 * height + 0.25 * BALL_RADIUS,
-    blocked: true,
   },
   {
     ...pocket,
@@ -32,3 +31,11 @@ export const pockets = [
   { ...pocket, x: 0, y: height },
   { ...pocket, x: width, y: height },
 ];
+
+export function blockPockets(ints) {
+  const p = pockets();
+  for (const i of ints) {
+    p[i].blocked = true;
+  }
+  return p;
+}
