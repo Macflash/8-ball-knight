@@ -76,6 +76,7 @@ function App() {
       if (won || lost) return;
       if (activeMonster.hp > 0) {
         console.log("attack!");
+        playgoblinTurn();
         const dx = cueball.x - activeMonster.x;
         const dy = cueball.y - activeMonster.y;
         const angle = Math.atan2(dy, dx);
