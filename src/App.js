@@ -83,12 +83,6 @@ function App() {
     return () => (valid = false);
   }, [activeMonster, moving]);
 
-  // stop attacks
-  React.useEffect(() => {
-    if (moving) return;
-    setBalls((balls) => balls.map((ball) => ({ ...ball, attacking: false })));
-  }, [moving, balls.filter((b) => b.attacking).length]);
-
   return (
     <div
       style={{
