@@ -74,6 +74,8 @@ function moveBalls(balls) {
           ballB.imgs = { normal: explosion };
           ballB.explode = 100;
           ballA.hp = 0;
+          ballA.vx = 0;
+          ballA.vy = 0;
           continue;
         }
 
@@ -159,6 +161,7 @@ function App() {
       hp: 3,
       maxhp: 3,
       attack: 1,
+      speed: 1,
       ranged: true,
     },
     {
@@ -172,6 +175,7 @@ function App() {
       hp: 5,
       maxhp: 5,
       attack: 2,
+      speed: 0.5,
     },
     {
       monster: true,
@@ -184,6 +188,7 @@ function App() {
       hp: 5,
       maxhp: 5,
       attack: 2,
+      speed: 0.5,
     },
 
     // Pockets
@@ -253,14 +258,15 @@ function App() {
         const dy = cueball.y - activeMonster.y;
         const angle = Math.atan2(dy, dx);
 
-        const speed = 1;
-        activeMonster.vx = speed * Math.cos(angle);
-        activeMonster.vy = speed * Math.sin(angle);
+        activeMonster.vx = activeMonster.speed * Math.cos(angle);
+        activeMonster.vy = activeMonster.speed * Math.sin(angle);
       }
 
       // probably losing the index here. and getting thrown off?
       const activeIndex = monsters.indexOf(activeMonster);
       const nextMonster = monsters[activeIndex + 1];
+      console.log("next monster", nextMonster);
+
       activeMonster.active = false;
       activeMonster.attacking = true;
 
@@ -332,9 +338,11 @@ function App() {
             key={index}
             style={{
               background:
-                (!moving && ball.active) || magnitude(ball) ? ball.color : "",
+                (!moving && ball.hp > 0 && ball.active) || magnitude(ball)
+                  ? ball.color
+                  : "",
               boxShadow:
-                (!moving && ball.active) || magnitude(ball)
+                (!moving && ball.hp > 0 && ball.active) || magnitude(ball)
                   ? `0 0 ${0.5 * BALL_RADIUS}px ${ball.color}`
                   : "",
               position: "absolute",
