@@ -59,13 +59,17 @@ export function moveBalls(balls) {
 
     for (let j = i + 1; j < moved.length; j++) {
       const ballB = moved[j];
-      if (ballB.inPocket && !ballB.hole) continue;
       if (ballB.hp <= 0 && !ballB.hole) continue;
 
       const distanceBetweenCenters = distance(ballA, ballB);
       if (distanceBetweenCenters < 2 * BALL_RADIUS) {
         // Collision!
         if (ballB.hole) {
+          if (ballB.blocked) {
+            console.log("blocked!");
+            continue;
+          }
+
           console.log("pocketed", ballA);
           ballB.explode = 100;
           ballA.hp = 0;
@@ -84,21 +88,21 @@ export function moveBalls(balls) {
         }
 
         // if either dies... maybe ignore the collision, like.. blast through?
-        if (ballA.hp <= 0) {
+        if (!ballA.hole && ballA.hp <= 0) {
           console.log("ballA dead!", ballA);
           ballA.explode = 100;
           ballA.hp = 0;
           ballA.vx = 0;
           ballA.vy = 0;
-          continue;
+          continue; // continuing might be weird here.
         }
-        if (ballB.hp <= 0) {
+        if (!ballB.hole && ballB.hp <= 0) {
           console.log("ballB dead!", ballB);
           ballB.explode = 100;
           ballB.hp = 0;
           ballB.vx = 0;
           ballB.vy = 0;
-          continue;
+          continue; // continuing might be weird here.
         }
 
         // Undo any overlap

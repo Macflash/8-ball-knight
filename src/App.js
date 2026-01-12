@@ -1,9 +1,9 @@
 import "./App.css";
 import React from "react";
 
-import table from "./images/table.png";
-import stick from "./images/stick.png";
-import explosion from "./images/explosion.png";
+import table from "./images/misc/table.png";
+import stick from "./images/misc/stick.png";
+import explosion from "./images/misc/explosion.png";
 
 import {
   moveBalls,
@@ -193,6 +193,13 @@ function App() {
               alignItems: "center",
             }}
           >
+            {ball.hole && ball.blocked ? (
+              <img
+                style={{ marginTop: -0.1 * BALL_RADIUS }}
+                src={ball.imgs.blocked}
+                height={BALL_RADIUS * 2.5}
+              ></img>
+            ) : undefined}
             {ball.hp > 0 && ball.imgs ? (
               <img
                 style={{ marginTop: -0.1 * BALL_RADIUS }}
