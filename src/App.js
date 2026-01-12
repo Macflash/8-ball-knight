@@ -5,7 +5,14 @@ import table from "./images/table.png";
 import stick from "./images/stick.png";
 import explosion from "./images/explosion.png";
 
-import { moveBalls, BALL_RADIUS, height, width, magnitude } from "./balls";
+import {
+  moveBalls,
+  BALL_RADIUS,
+  height,
+  width,
+  magnitude,
+  angleFromAtoB,
+} from "./balls";
 import { getLevel } from "./levels/levels";
 
 function App() {
@@ -21,6 +28,7 @@ function App() {
   const won = !monsters.filter((ball) => ball.hp > 0).length;
   const lost = cueball.hp <= 0;
 
+  const aiming = cueball.active && !moving && !won && !lost;
   const [dir, setDir] = React.useState(0);
 
   // Move balls
@@ -94,8 +102,26 @@ function App() {
         width: "100vw",
         position: "relative",
       }}
+      id="the-game"
       autoFocus={true}
       tabIndex={0}
+      ref={() => document.getElementById("the-game")?.focus()}
+      onMouseMove={(e) => {
+        if (aiming) {
+          // console.log(e);
+          // get angle
+          const tablePos = document.getElementById("game-table");
+          const cuepos = {
+            x: tablePos.offsetLeft + cueball.x,
+            y: tablePos.offsetTop + cueball.y,
+          };
+          const m = { x: e.clientX, y: e.clientY };
+          const angle = angleFromAtoB(m, cuepos);
+          const degrees = (angle * 180) / Math.PI;
+          console.log(degrees, m, cuepos);
+          setDir(degrees + 90);
+        }
+      }}
       onKeyDown={(e) => {
         if (moving) return;
         if (!cueball.active) return;
@@ -125,6 +151,7 @@ function App() {
     >
       <img src={table} />
       <div
+        id="game-table"
         style={{
           marginLeft: 13,
           // border: "1px solid green",
@@ -137,6 +164,7 @@ function App() {
         {balls.map((ball, index) => (
           <div
             key={index}
+            id={ball.cue ? "game-cue" : undefined}
             style={{
               background:
                 (!moving && ball.hp > 0 && ball.active) || magnitude(ball)
@@ -195,7 +223,7 @@ function App() {
                   : undefined}
               </div>
             ) : undefined}
-            {ball.cue && ball.active && !moving && !won && !lost ? (
+            {ball.cue && aiming ? (
               <img
                 src={stick}
                 height={BALL_RADIUS * 10}

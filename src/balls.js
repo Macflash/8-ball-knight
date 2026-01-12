@@ -13,6 +13,12 @@ export function magnitude(ball) {
   return Math.sqrt(Math.pow(ball.vx, 2) + Math.pow(ball.vy, 2));
 }
 
+export function angleFromAtoB(ballA, ballB) {
+  const dx = ballB.x - ballA.x;
+  const dy = ballB.y - ballA.y;
+  return Math.atan2(dy, dx);
+}
+
 export function moveBalls(balls) {
   const moved = balls.map((ball) => {
     // if the ATTACKING ball ever stops, end the attack.
