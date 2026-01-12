@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/8-ball-knight/static/css/main.0c2b6e3c.css",
+    "main.js": "/8-ball-knight/static/js/main.eddddf02.js",
+    "static/js/453.203d2430.chunk.js": "/8-ball-knight/static/js/453.203d2430.chunk.js",
+    "static/media/table.png": "/8-ball-knight/static/media/table.a732071089d9970c49e8.png",
+    "static/media/hurt.png": "/8-ball-knight/static/media/hurt.efefd06558777335e491.png",
+    "static/media/attack.png": "/8-ball-knight/static/media/attack.b6f2be66ecbe1e23ed2b.png",
+    "static/media/happy.png": "/8-ball-knight/static/media/happy.e5e431c4679eb2242231.png",
+    "static/media/surprised.png": "/8-ball-knight/static/media/surprised.07cd311bdc3d0b2f7a8d.png",
+    "static/media/normal.png": "/8-ball-knight/static/media/normal.f336938c7b0c4b6f4c8b.png",
+    "static/media/explosion.png": "/8-ball-knight/static/media/explosion.7f0e536b22127c952efc.png",
+    "static/media/stick.png": "/8-ball-knight/static/media/stick.5a90cefb50ba273501ea.png",
+    "index.html": "/8-ball-knight/index.html",
+    "main.0c2b6e3c.css.map": "/8-ball-knight/static/css/main.0c2b6e3c.css.map",
+    "main.eddddf02.js.map": "/8-ball-knight/static/js/main.eddddf02.js.map",
+    "453.203d2430.chunk.js.map": "/8-ball-knight/static/js/453.203d2430.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0c2b6e3c.css",
+    "static/js/main.eddddf02.js"
+  ]
+}
