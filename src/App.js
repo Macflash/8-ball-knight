@@ -31,6 +31,8 @@ function App() {
   const aiming = cueball.active && !moving && !won && !lost;
   const [dir, setDir] = React.useState(0);
 
+  // TODO: Let you keep shooting if you pocket an enemy!
+
   // Move balls
   React.useEffect(() => {
     let valid = true;
@@ -100,6 +102,7 @@ function App() {
     // move active state!
     cueball.active = false;
     cueball.attacking = true;
+
     const nextMonster = monsters[0];
     if (nextMonster) nextMonster.active = true;
     setBalls([...balls]);

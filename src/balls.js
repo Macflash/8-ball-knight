@@ -19,6 +19,14 @@ export function angleFromAtoB(ballA, ballB) {
   return Math.atan2(dy, dx);
 }
 
+// TODO: refactor this!
+// Split into separate functions:
+// 1. attack!
+// 2. move
+// 3. collide balls
+// 4. check pockets
+// or something like that idk...
+
 export function moveBalls(balls) {
   const moved = balls.map((ball) => {
     // if the ATTACKING ball ever stops, end the attack.
@@ -70,6 +78,18 @@ export function moveBalls(balls) {
             continue;
           }
 
+          if (ballA.cue) {
+            console.log("SCRATCH");
+            ballB.explode = 100;
+            ballA.hp--;
+            ballA.vx = 0;
+            ballA.vy = 0;
+            ballA.x = width / 2;
+            ballA.y = (height * 3) / 4;
+            continue;
+          }
+
+          // TODO: you should get DROPPED back in.
           console.log("pocketed", ballA);
           ballB.explode = 100;
           ballA.hp = 0;
