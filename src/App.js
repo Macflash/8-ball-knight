@@ -3,8 +3,15 @@ import "./App.css";
 import React from "react";
 
 import table from "./images/table.png";
+import orc from "./images/orc.png";
+import orc_surprised from "./images/orc_surprised.png";
 
-const BALL_RADIUS = 20;
+import cue from "./images/cue/default.png";
+import happy from "./images/cue/happy.png";
+import hurt from "./images/cue/hurt.png";
+import surprised from "./images/cue/surprised.png";
+
+const BALL_RADIUS = 30;
 const width = 400;
 const height = 550;
 
@@ -13,6 +20,10 @@ function distance(ballA, ballB) {
     Math.pow(ballA.x + BALL_RADIUS - (ballB.x + BALL_RADIUS), 2) +
       Math.pow(ballA.y + BALL_RADIUS - (ballB.y + BALL_RADIUS), 2)
   );
+}
+
+function magnitude(ball) {
+  return Math.sqrt(Math.pow(ball.vx, 2) + Math.pow(ball.vy, 2));
 }
 
 function moveBalls(balls) {
@@ -27,6 +38,14 @@ function moveBalls(balls) {
       ball.vy *= -1;
     }
 
+    const vel = magnitude(ball);
+    const friction = 0.001;
+    if (vel > 0) {
+      const newVel = Math.max(0, vel - friction);
+      ball.vx = (ball.vx / vel) * newVel;
+      ball.vy = (ball.vy / vel) * newVel;
+    }
+
     ball.x += ball.vx || 0;
     ball.y += ball.vy || 0;
     return ball;
@@ -36,14 +55,18 @@ function moveBalls(balls) {
     const ballA = moved[i];
     if (ballA.hole) continue;
     if (ballA.inPocket) continue;
+
     for (let j = i + 1; j < moved.length; j++) {
       const ballB = moved[j];
       if (ballB.inPocket) continue;
 
       const distanceBetweenCenters = distance(ballA, ballB);
       if (distanceBetweenCenters < 2 * BALL_RADIUS) {
+        // Collision!
         if (ballB.hole) {
+          console.log("pocketed", ballA);
           ballA.inPocket = true;
+          continue;
         }
 
         // Undo any overlap
@@ -88,14 +111,14 @@ function App() {
     {
       hole: true,
       color: "black",
-      x: -1 * BALL_RADIUS,
-      y: 225 + 2 * BALL_RADIUS,
+      x: -1.75 * BALL_RADIUS,
+      y: 225 + 0.75 * BALL_RADIUS,
     },
     {
       hole: true,
       color: "black",
-      x: 400 - BALL_RADIUS,
-      y: 225 + 2 * BALL_RADIUS,
+      x: 400 - 0.25 * BALL_RADIUS,
+      y: 225 + 0.75 * BALL_RADIUS,
     },
 
     // bottom corner pockets
@@ -105,6 +128,12 @@ function App() {
     {
       cue: true,
       color: "white",
+      imgs: {
+        default: cue,
+        moving: surprised,
+        hurt,
+        happy,
+      },
       x: 200,
       y: 450,
       vx: -0.1,
@@ -112,6 +141,7 @@ function App() {
     },
     {
       color: "red",
+      imgs: { default: orc, moving: orc_surprised },
       x: 200,
       y: 200,
       vx: 0,
@@ -119,6 +149,7 @@ function App() {
     },
     {
       color: "yellow",
+      imgs: { default: orc, moving: orc_surprised },
       x: 150,
       y: 150,
       vx: 0,
@@ -126,6 +157,7 @@ function App() {
     },
     {
       color: "blue",
+      imgs: { default: orc, moving: orc_surprised },
       x: 250,
       y: 150,
       vx: 0,
@@ -139,6 +171,8 @@ function App() {
       setBalls(moveBalls);
     }, 10);
   }, [tick, balls]);
+
+  const moving = balls.some((ball) => magnitude(ball) > 0);
 
   return (
     <div
@@ -154,7 +188,7 @@ function App() {
       <img src={table} />
       <div
         style={{
-          background: "green",
+          // background: "green",
           position: "absolute",
           width: 400,
           height: 550,
@@ -167,15 +201,31 @@ function App() {
             <div
               key={index}
               style={{
+                opacity: ball.hole ? 0.1 : 1,
                 background: ball.color,
+                boxShadow: `0 0 ${0.5 * BALL_RADIUS}px ${ball.color}`,
                 position: "absolute",
                 marginLeft: ball.x,
                 marginTop: ball.y,
                 height: BALL_RADIUS * 2,
                 width: BALL_RADIUS * 2,
                 borderRadius: BALL_RADIUS,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
-            ></div>
+            >
+              {ball.imgs ? (
+                <img
+                  style={{ marginTop: -0.1 * BALL_RADIUS }}
+                  src={
+                    ((ball.vx || ball.vy) && ball.imgs.moving) ||
+                    ball.imgs.default
+                  }
+                  height={BALL_RADIUS * 2.5}
+                ></img>
+              ) : undefined}
+            </div>
           ))}
       </div>
     </div>
