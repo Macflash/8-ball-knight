@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/8-ball-knight/static/css/main.0c2b6e3c.css",
-    "main.js": "/8-ball-knight/static/js/main.636611cf.js",
+    "main.js": "/8-ball-knight/static/js/main.98041fe3.js",
     "static/js/453.203d2430.chunk.js": "/8-ball-knight/static/js/453.203d2430.chunk.js",
     "static/media/table.png": "/8-ball-knight/static/media/table.a732071089d9970c49e8.png",
     "static/media/hurt.png": "/8-ball-knight/static/media/hurt.efefd06558777335e491.png",
@@ -12,13 +12,24 @@
     "static/media/explosion.png": "/8-ball-knight/static/media/explosion.7f0e536b22127c952efc.png",
     "static/media/rock.png": "/8-ball-knight/static/media/rock.dd1a94c443bd8c573ebb.png",
     "static/media/stick.png": "/8-ball-knight/static/media/stick.c5d7d9f25369ec636eee.png",
+    "static/media/pocket2.mp3": "/8-ball-knight/static/media/pocket2.0c38be4966de7f46ee96.mp3",
+    "static/media/orchurt.mp3": "/8-ball-knight/static/media/orchurt.c085df430bb11cf30b03.mp3",
+    "static/media/goblinhurt.mp3": "/8-ball-knight/static/media/goblinhurt.6135cef8a30121754776.mp3",
+    "static/media/balldrop.mp3": "/8-ball-knight/static/media/balldrop.2d30784a4d1ee58f433e.mp3",
+    "static/media/bumper4.mp3": "/8-ball-knight/static/media/bumper4.56a4c67b4306f88f3099.mp3",
+    "static/media/goblinturn.mp3": "/8-ball-knight/static/media/goblinturn.dad8da0ec8ccf03b4875.mp3",
+    "static/media/scratchplunk.mp3": "/8-ball-knight/static/media/scratchplunk.dbf019432aeff1baa1c4.mp3",
+    "static/media/cueturn.mp3": "/8-ball-knight/static/media/cueturn.f30ccc1e870368963ee8.mp3",
+    "static/media/cuehurt.mp3": "/8-ball-knight/static/media/cuehurt.26069ffcf8e6911bf7da.mp3",
+    "static/media/orcturn.mp3": "/8-ball-knight/static/media/orcturn.8be955eba4e07b334777.mp3",
+    "static/media/ballhit.mp3": "/8-ball-knight/static/media/ballhit.d172983adf21a6f9bf92.mp3",
     "index.html": "/8-ball-knight/index.html",
     "main.0c2b6e3c.css.map": "/8-ball-knight/static/css/main.0c2b6e3c.css.map",
-    "main.636611cf.js.map": "/8-ball-knight/static/js/main.636611cf.js.map",
+    "main.98041fe3.js.map": "/8-ball-knight/static/js/main.98041fe3.js.map",
     "453.203d2430.chunk.js.map": "/8-ball-knight/static/js/453.203d2430.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0c2b6e3c.css",
-    "static/js/main.636611cf.js"
+    "static/js/main.98041fe3.js"
   ]
 }
