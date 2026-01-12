@@ -91,6 +91,20 @@ function App() {
     return () => (valid = false);
   }, [activeMonster, moving]);
 
+  const shoot = React.useCallback(() => {
+    // shoot the cue ball
+    const speed = 2;
+    const radians = ((90 - dir) * Math.PI) / 180;
+    cueball.vx = speed * Math.cos(radians);
+    cueball.vy = -speed * Math.sin(radians);
+    // move active state!
+    cueball.active = false;
+    cueball.attacking = true;
+    const nextMonster = monsters[0];
+    if (nextMonster) nextMonster.active = true;
+    setBalls([...balls]);
+  }, [balls, setBalls]);
+
   return (
     <div
       style={{
@@ -107,19 +121,23 @@ function App() {
       tabIndex={0}
       ref={() => document.getElementById("the-game")?.focus()}
       onMouseMove={(e) => {
+        // if (aiming) {
+        // console.log(e);
+        // get angle
+        const tablePos = document.getElementById("game-table");
+        const cuepos = {
+          x: tablePos.offsetLeft + cueball.x,
+          y: tablePos.offsetTop + cueball.y,
+        };
+        const m = { x: e.clientX, y: e.clientY };
+        const angle = angleFromAtoB(m, cuepos);
+        const degrees = (angle * 180) / Math.PI;
+        // console.log(degrees, m, cuepos);
+        setDir(degrees + 90);
+      }}
+      onMouseDown={() => {
         if (aiming) {
-          // console.log(e);
-          // get angle
-          const tablePos = document.getElementById("game-table");
-          const cuepos = {
-            x: tablePos.offsetLeft + cueball.x,
-            y: tablePos.offsetTop + cueball.y,
-          };
-          const m = { x: e.clientX, y: e.clientY };
-          const angle = angleFromAtoB(m, cuepos);
-          const degrees = (angle * 180) / Math.PI;
-          console.log(degrees, m, cuepos);
-          setDir(degrees + 90);
+          shoot();
         }
       }}
       onKeyDown={(e) => {
@@ -135,17 +153,7 @@ function App() {
         }
 
         if (e.key == "ArrowUp" || e.key == "w") {
-          // shoot the cue ball
-          const speed = 2;
-          const radians = ((90 - dir) * Math.PI) / 180;
-          cueball.vx = speed * Math.cos(radians);
-          cueball.vy = -speed * Math.sin(radians);
-          // move active state!
-          cueball.active = false;
-          cueball.attacking = true;
-          const nextMonster = monsters[0];
-          if (nextMonster) nextMonster.active = true;
-          setBalls([...balls]);
+          shoot();
         }
       }}
     >
