@@ -1,4 +1,3 @@
-import logo from "./logo.svg";
 import "./App.css";
 import React from "react";
 
@@ -6,227 +5,29 @@ import table from "./images/table.png";
 import stick from "./images/stick.png";
 import explosion from "./images/explosion.png";
 
-import { imgs as cue_imgs } from "./images/cue/def";
-import { imgs as goblin_imgs } from "./images/goblin/def";
-import { imgs as orc_imgs } from "./images/orc/def";
-
-const BALL_RADIUS = 30;
-const width = 400;
-const height = 536;
-
-function distance(ballA, ballB) {
-  return Math.sqrt(
-    Math.pow(ballA.x + BALL_RADIUS - (ballB.x + BALL_RADIUS), 2) +
-      Math.pow(ballA.y + BALL_RADIUS - (ballB.y + BALL_RADIUS), 2)
-  );
-}
-
-function magnitude(ball) {
-  return Math.sqrt(Math.pow(ball.vx, 2) + Math.pow(ball.vy, 2));
-}
-
-function moveBalls(balls) {
-  const moved = balls.map((ball) => {
-    // if the ATTACKING ball ever stops, end the attack.
-    if (ball.attacking && magnitude(ball) < 0.01) {
-      ball.attacking = false;
-    }
-
-    if (ball.explode) ball.explode--;
-    if (ball.hole || ball.hp <= 0) return ball;
-
-    // wall bounces
-    if (ball.x > width - BALL_RADIUS || ball.x < BALL_RADIUS) {
-      ball.vx *= -1;
-    }
-    if (ball.y > height - BALL_RADIUS || ball.y < BALL_RADIUS) {
-      ball.vy *= -1;
-    }
-
-    const vel = magnitude(ball);
-    const friction = 0.002;
-    if (vel > 0) {
-      const newVel = Math.max(0, vel - friction);
-      ball.vx = (ball.vx / vel) * newVel;
-      ball.vy = (ball.vy / vel) * newVel;
-    }
-
-    ball.x += ball.vx || 0;
-    ball.y += ball.vy || 0;
-    return ball;
-  });
-
-  for (let i = 0; i < moved.length; i++) {
-    const ballA = moved[i];
-    if (ballA.hole) continue;
-    if (ballA.hp <= 0 && !ballA.hole) continue;
-
-    for (let j = i + 1; j < moved.length; j++) {
-      const ballB = moved[j];
-      if (ballB.inPocket && !ballB.hole) continue;
-      if (ballB.hp <= 0 && !ballB.hole) continue;
-
-      const distanceBetweenCenters = distance(ballA, ballB);
-      if (distanceBetweenCenters < 2 * BALL_RADIUS) {
-        // Collision!
-        if (ballB.hole) {
-          console.log("pocketed", ballA);
-          ballB.imgs = { normal: explosion };
-          ballB.explode = 100;
-          ballA.hp = 0;
-          ballA.vx = 0;
-          ballA.vy = 0;
-          continue;
-        }
-
-        // DAMAGE! (monsters don't hurt each other!)
-        if (ballA.monster !== ballB.monster) {
-          if (ballA.attacking) {
-            ballB.hp -= ballA.attack;
-          } else if (ballB.attacking) {
-            ballA.hp -= ballB.attack;
-          }
-        }
-
-        // if either dies... maybe ignore the collision, like.. blast through?
-        if (ballA.hp <= 0) {
-          console.log("ballA dead!", ballA);
-          ballA.explode = 100;
-          continue;
-        }
-        if (ballB.hp <= 0) {
-          console.log("ballB dead!", ballB);
-          ballB.explode = 100;
-          continue;
-        }
-
-        // Undo any overlap
-        const overlap = BALL_RADIUS * 2 - distanceBetweenCenters;
-        const normalX = (ballA.x - ballB.x) / distanceBetweenCenters;
-        const normalY = (ballA.y - ballB.y) / distanceBetweenCenters;
-
-        // This assumes equal mass/diameter for it to look right.
-        ballA.x += (normalX * overlap) / 2;
-        ballA.y += (normalY * overlap) / 2;
-        ballB.x -= (normalX * overlap) / 2;
-        ballB.x -= (normalY * overlap) / 2;
-
-        // swap relative velocities
-
-        const relVelX = ballA.vx - ballB.vx;
-        const relVelY = ballA.vy - ballB.vy;
-        const velAlongNormal = relVelX * normalX + relVelY * normalY;
-
-        if (velAlongNormal > 0) continue;
-
-        // swap the vel components
-        ballA.vx -= velAlongNormal * normalX;
-        ballA.vy -= velAlongNormal * normalY;
-        ballB.vx += velAlongNormal * normalX;
-        ballB.vy += velAlongNormal * normalY;
-      }
-    }
-  }
-
-  return moved;
-}
+import { moveBalls, BALL_RADIUS, height, width, magnitude } from "./balls";
+import { getLevel } from "./levels/levels";
 
 function App() {
-  const [tick, setTick] = React.useState(0);
-  const [balls, setBalls] = React.useState([
-    // Cue ball (YOU!)
-    {
-      cue: true,
-      color: "rgba(255,255,255,0.5)",
-      imgs: cue_imgs,
-      x: 200,
-      y: 450,
-      vx: 0,
-      vy: 0,
-      hp: 5,
-      maxhp: 5,
-      attack: 2,
-      active: true,
-    },
+  const [level, setLevel] = React.useState(2);
+  const [balls, setBalls] = React.useState(getLevel(level));
 
-    // Monsters!
-    {
-      monster: true,
-      color: "rgba(255,0,0,0.5)",
-      imgs: goblin_imgs,
-      x: 200,
-      y: 200,
-      vx: 0,
-      vy: 0,
-      hp: 3,
-      maxhp: 3,
-      attack: 1,
-      speed: 1,
-      ranged: true,
-    },
-    {
-      monster: true,
-      color: "rgba(255,0,0,0.5)",
-      imgs: orc_imgs,
-      x: 150,
-      y: 150,
-      vx: 0,
-      vy: 0,
-      hp: 5,
-      maxhp: 5,
-      attack: 2,
-      speed: 0.5,
-    },
-    {
-      monster: true,
-      color: "rgba(255,0,0,0.5)",
-      imgs: orc_imgs,
-      x: 250,
-      y: 150,
-      vx: 0,
-      vy: 0,
-      hp: 5,
-      maxhp: 5,
-      attack: 2,
-      speed: 0.5,
-    },
+  console.log("level", balls);
 
-    // Pockets
-    { hole: true, color: "black", x: 0, y: 0 },
-    { hole: true, color: "black", x: 400, y: 0 },
-    {
-      hole: true,
-      color: "black",
-      x: -0.75 * BALL_RADIUS,
-      y: 0.5 * height + 0.25 * BALL_RADIUS,
-    },
-    {
-      hole: true,
-      color: "black",
-      x: width + 0.75 * BALL_RADIUS,
-      y: 0.5 * height + 0.25 * BALL_RADIUS,
-    },
-    { hole: true, color: "black", x: 0, y: 550 },
-    { hole: true, color: "black", x: 400, y: 550 },
-  ]);
-
-  const moving = balls.some((ball) => !ball.inPocket && magnitude(ball) > 0);
+  const moving = balls.some((ball) => magnitude(ball) > 0);
   const cueball = balls.find((ball) => ball.cue);
-  const monsters = balls.filter(
-    (ball) => !ball.cue && !ball.hole && !ball.inPocket
-  );
+  const monsters = balls.filter((ball) => !ball.cue && !ball.hole);
 
   const activeMonster = monsters.find((ball) => ball.active);
 
   const won = !monsters.filter((ball) => ball.hp > 0).length;
-  const lost = cueball.inPocket || cueball.hp <= 0;
+  const lost = cueball.hp <= 0;
 
   const [dir, setDir] = React.useState(0);
 
   // Move balls
   React.useEffect(() => {
     setTimeout(() => {
-      // setTick((tick) => tick + 1);
       setBalls(moveBalls);
     }, 10);
   }, [moving, balls]);
@@ -379,6 +180,21 @@ function App() {
                 height={BALL_RADIUS * 4}
               />
             ) : null}
+            {ball.hp > 0 ? (
+              <div
+                style={{
+                  position: "absolute",
+                  color: "white",
+                  top: -1 * BALL_RADIUS,
+                  width: "max-content",
+                }}
+              >
+                {ball.hp}♥️
+                {ball.attack
+                  ? ` ${ball.attack}${ball.ranged ? "🏹" : "🗡️"}`
+                  : undefined}
+              </div>
+            ) : undefined}
             {ball.cue && ball.active && !moving && !won && !lost ? (
               <img
                 src={stick}
@@ -400,7 +216,14 @@ function App() {
         <div style={{ position: "absolute", color: "gold", fontSize: 100 }}>
           You won!
           <div>
-            <button>Next level</button>
+            <button
+              onClick={() => {
+                setLevel(level + 1);
+                setBalls(getLevel(level + 1));
+              }}
+            >
+              Next level
+            </button>
           </div>
         </div>
       ) : null}
