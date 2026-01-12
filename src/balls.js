@@ -87,11 +87,17 @@ export function moveBalls(balls) {
         if (ballA.hp <= 0) {
           console.log("ballA dead!", ballA);
           ballA.explode = 100;
+          ballA.hp = 0;
+          ballA.vx = 0;
+          ballA.vy = 0;
           continue;
         }
         if (ballB.hp <= 0) {
           console.log("ballB dead!", ballB);
           ballB.explode = 100;
+          ballB.hp = 0;
+          ballB.vx = 0;
+          ballB.vy = 0;
           continue;
         }
 

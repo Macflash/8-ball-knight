@@ -19,7 +19,7 @@ function App() {
   const [level, setLevel] = React.useState(0);
   const [balls, setBalls] = React.useState(getLevel(level));
 
-  const moving = balls.some((ball) => magnitude(ball) > 0);
+  const moving = balls.some((ball) => magnitude(ball) > 0 && ball.hp > 0);
   const cueball = balls.find((ball) => ball.cue);
   const monsters = balls.filter((ball) => !ball.cue && !ball.hole);
 
@@ -248,7 +248,7 @@ function App() {
           </div>
         ))}
       </div>
-      {won && !lost ? (
+      {won ? (
         <div style={{ position: "absolute", color: "gold", fontSize: 100 }}>
           You won!
           <div>
@@ -265,7 +265,7 @@ function App() {
         </div>
       ) : null}
 
-      {lost ? (
+      {lost && !won ? (
         <div style={{ position: "absolute", color: "red", fontSize: 100 }}>
           GAME OVER!
           <br />
