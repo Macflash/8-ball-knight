@@ -14,6 +14,7 @@ import {
   angleFromAtoB,
 } from "./balls";
 import { getLevel } from "./levels/levels";
+import { playBallDrop } from "./sounds/audio";
 
 function App() {
   const [level, setLevel] = React.useState(0);
@@ -106,6 +107,8 @@ function App() {
     const nextMonster = monsters[0];
     if (nextMonster) nextMonster.active = true;
     setBalls([...balls]);
+
+    playBallDrop();
   }, [balls, setBalls]);
 
   return (

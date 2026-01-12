@@ -1,3 +1,10 @@
+import {
+  playBallHit,
+  playBumper,
+  playPocket,
+  playScratch,
+} from "./sounds/audio";
+
 export const BALL_RADIUS = 30;
 export const width = 400;
 export const height = 536;
@@ -40,12 +47,16 @@ export function moveBalls(balls) {
     // wall bounces
     // could change this to take some of the other direction off too
     // could depend on the spin, etc if we wanna get fancy later.
+    let bumped = false;
     if (ball.x > width - BALL_RADIUS || ball.x < BALL_RADIUS) {
       ball.vx *= -1;
+      bumped |= Math.abs(ball.vx) > 0.1;
     }
     if (ball.y > height - BALL_RADIUS || ball.y < BALL_RADIUS) {
       ball.vy *= -1;
+      bumped |= Math.abs(ball.vy) > 0.1;
     }
+    if (bumped) playBumper();
 
     const vel = magnitude(ball);
     const friction = 0.002;
@@ -80,6 +91,7 @@ export function moveBalls(balls) {
 
           if (ballA.cue) {
             console.log("SCRATCH");
+            playScratch();
             ballB.explode = 100;
             ballA.hp--;
             ballA.vx = 0;
@@ -91,12 +103,15 @@ export function moveBalls(balls) {
 
           // TODO: you should get DROPPED back in.
           console.log("pocketed", ballA);
+          playPocket();
           ballB.explode = 100;
           ballA.hp = 0;
           ballA.vx = 0;
           ballA.vy = 0;
           continue;
         }
+
+        playBallHit();
 
         // DAMAGE! (monsters don't hurt each other!)
         if (ballA.monster !== ballB.monster) {
