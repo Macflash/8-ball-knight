@@ -34,6 +34,11 @@ function App() {
 
   // TODO: Let you keep shooting if you pocket an enemy!
 
+  // Ball turn
+  // AIM
+  // ATTACK
+  // RESOLVE <-- this is when we change turns!
+
   // Move balls
   React.useEffect(() => {
     let valid = true;
@@ -50,8 +55,6 @@ function App() {
 
     if (moving) return;
     if (!activeMonster) return;
-
-    console.log("active monster", activeMonster);
 
     if (activeMonster.hp <= 0) {
       console.log("active is dead");

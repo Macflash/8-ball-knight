@@ -1,0 +1,36 @@
+// TODO: Add Z? could easily just treat it as 0.
+export interface Vec {
+  x: number;
+  y: number;
+}
+
+/** @returns magnitude of a vector */
+export function magnitude(v: Vec) {
+  return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
+}
+
+/** @returns angle of a vector in radians */
+export function angle(v: Vec): number {
+  return Math.atan2(v.y, v.x);
+}
+
+/** @returns a new vector (a - b) */
+export function add(a: Vec, b: Vec): Vec {
+  return { x: a.x + b.x, y: a.y + b.y };
+}
+
+/** @returns a new vector (a - b) */
+export function subtract(a: Vec, b: Vec): Vec {
+  return { x: a.x - b.x, y: a.y - b.y };
+}
+
+/** @returns distance between 2 points */
+export function distance(a: Vec, b: Vec): number {
+  return magnitude(subtract(a, b));
+}
+
+/** @returns angle between 2 points */
+export function angleFromAtoB(a: Vec, b: Vec) {
+  const delta = subtract(b, a);
+  return angle(delta);
+}
