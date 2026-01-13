@@ -4,6 +4,10 @@ export interface Vec {
   y: number;
 }
 
+export function vec(x = 0, y = 0): Vec {
+  return { x, y };
+}
+
 /** @returns a new vector scaled by n. */
 export function scale(v: Vec, n: number): Vec {
   return { x: v.x * n, y: v.y * n };

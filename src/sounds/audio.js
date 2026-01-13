@@ -13,6 +13,18 @@ import goblinhurt from "./goblinhurt.mp3";
 import orcturn from "./orcturn.mp3";
 import orchurt from "./orchurt.mp3";
 
+export const hero_sounds = {
+  turn: cueturn,
+  attack: cuehurt,
+  hurt: cuehurt,
+};
+
+export const goblin_sounds = {
+  turn: goblinturn,
+  attack: goblinhurt,
+  hurt: goblinhurt,
+};
+
 const max = 10;
 const audioEls = [];
 

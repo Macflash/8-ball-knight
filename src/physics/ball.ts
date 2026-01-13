@@ -1,4 +1,5 @@
-import { add, distance, dot, normal, scale, subtract, Vec } from "./vec";
+import { magnitude } from "../balls";
+import { add, distance, dot, normal, scale, subtract, vec, Vec } from "./vec";
 
 export interface Ball {
   /** Mass */
@@ -13,7 +14,16 @@ export interface Ball {
   /** Velocity */
   v: Vec;
 
-  // TODO: Mass? Spin? Z?
+  // TODO: Spin? Z?
+}
+
+export function ball(r = 1, m = 1): Ball {
+  return {
+    m,
+    r,
+    p: vec(),
+    v: vec(),
+  };
 }
 
 /** Moves a ball according to its velocity */
@@ -21,17 +31,24 @@ export function move(ball: Ball) {
   if (ball.v) ball.p = add(ball.p, ball.v);
 }
 
+export function isMoving(ball: Ball) {
+  return magnitude(ball.v) > 0;
+}
+
 /** Collides 2 balls, updating their velocities and position accordingly */
-export function collide(a: Ball, b: Ball): boolean {
+export function collide(
+  a: Ball,
+  b: Ball,
+  updatePosition = true,
+  updateVelocities = true
+): boolean {
   const d = distance(a.p, b.p);
   const overlap = a.r + b.r - d;
   if (overlap < 0) return false;
 
   const n = normal(a.p, b.p, d);
-
-  undoOverlap(a, b, overlap, n);
-
-  swapVelocities(a, b, n);
+  if (updatePosition) undoOverlap(a, b, overlap, n);
+  if (updateVelocities) swapVelocities(a, b, n);
 
   return true;
 }
