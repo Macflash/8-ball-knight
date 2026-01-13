@@ -4,6 +4,11 @@ export interface Vec {
   y: number;
 }
 
+/** @returns a new vector scaled by n. */
+export function scale(v: Vec, n: number): Vec {
+  return { x: v.x * n, y: v.y * n };
+}
+
 /** @returns magnitude of a vector */
 export function magnitude(v: Vec) {
   return Math.sqrt(Math.pow(v.x, 2) + Math.pow(v.y, 2));
@@ -33,4 +38,12 @@ export function distance(a: Vec, b: Vec): number {
 export function angleFromAtoB(a: Vec, b: Vec) {
   const delta = subtract(b, a);
   return angle(delta);
+}
+
+export function normal(a: Vec, b: Vec, d = distance(a, b)) {
+  return scale(subtract(a, b), 1 / d);
+}
+
+export function dot(a: Vec, b: Vec): number {
+  return a.x * b.x + a.y * b.y;
 }

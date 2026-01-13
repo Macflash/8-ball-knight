@@ -21,25 +21,7 @@ function App() {
   const [balls, setBalls] = React.useState(getLevel(level));
 
   const moving = balls.some((ball) => magnitude(ball) > 0 && ball.hp > 0);
-  const cueball = balls.find((ball) => ball.cue);
-  const monsters = balls.filter((ball) => !ball.cue && !ball.hole);
 
-  const activeMonster = monsters.find((ball) => ball.active);
-
-  const won = !monsters.filter((ball) => ball.hp > 0).length;
-  const lost = cueball.hp <= 0;
-
-  const aiming = cueball.active && !moving && !won && !lost;
-  const [dir, setDir] = React.useState(0);
-
-  // TODO: Let you keep shooting if you pocket an enemy!
-
-  // Ball turn
-  // AIM
-  // ATTACK
-  // RESOLVE <-- this is when we change turns!
-
-  // Move balls
   React.useEffect(() => {
     let valid = true;
     requestAnimationFrame(() => {
@@ -47,7 +29,12 @@ function App() {
       setBalls(moveBalls);
     });
     return () => (valid = false);
-  }, [moving, balls]);
+  }, [moving, balls, setBalls]);
+
+  const cueball = balls.find((ball) => ball.cue);
+  const monsters = balls.filter((ball) => !ball.cue && !ball.hole);
+
+  const activeMonster = monsters.find((ball) => ball.active);
 
   // Aim and move enemies when it is their turn
   React.useEffect(() => {
@@ -102,6 +89,21 @@ function App() {
     }, 1500);
     return () => (valid = false);
   }, [activeMonster, moving]);
+
+  const won = !monsters.filter((ball) => ball.hp > 0).length;
+  const lost = cueball.hp <= 0;
+
+  const aiming = cueball.active && !moving && !won && !lost;
+  const [dir, setDir] = React.useState(0);
+
+  // TODO: Let you keep shooting if you pocket an enemy!
+
+  // Ball turn
+  // AIM
+  // ATTACK
+  // RESOLVE <-- this is when we change turns!
+
+  // Move balls
 
   const shoot = React.useCallback(() => {
     // shoot the cue ball
