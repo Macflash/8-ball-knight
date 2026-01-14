@@ -1,9 +1,11 @@
+import { playBumper } from "../../sounds/audio";
 import { Ball } from "./ball";
 import { magnitude, scale } from "./vec";
 
 export class Table {
   private readonly friction = 0.002;
   private readonly bounce = -0.95;
+
   constructor(readonly width: number, readonly height: number) {}
 
   slowBall(ball: Ball) {
@@ -45,6 +47,7 @@ export class Table {
       bumped = true;
     }
 
+    if (bumped) playBumper(); // could rate limit this if really needed.
     return bumped;
   }
 }

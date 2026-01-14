@@ -9,65 +9,50 @@ import { useMoveLevel } from "./game/hooks/useMoveLevel";
 import { HeroEl } from "./components/hero";
 import { MonsterEl } from "./components/monster";
 import { getLevel } from "./game/levels/level_defs";
+import { useActiveMonster } from "./game/hooks/useEnemyTurn";
 
 function App() {
   const { level, setLevel, moving } = useMoveLevel(getLevel(1));
 
   const cueball = level.hero;
   const monsters = level.monsters;
-  const activeMonster = monsters.find((ball) => ball.turn);
+
+  const { activeMonster } = useActiveMonster(level);
 
   // Aim and move enemies when it is their turn
-  // React.useEffect(() => {
-  //   let valid = true;
+  React.useEffect(() => {
+    let valid = true;
 
-  //   if (moving) return;
-  //   if (!activeMonster) return;
+    if (moving) return;
+    if (!activeMonster) return;
 
-  //   if (isDead(activeMonster)) {
-  //     console.log("active is dead");
-  //     activeMonster.turn = TurnStage.inactive;
-  //     const activeIndex = monsters.indexOf(activeMonster);
-  //     const nextMonster = monsters[activeIndex + 1];
+    console.log("setting timeout...");
 
-  //     if (nextMonster?.monster) {
-  //       nextMonster.turn = TurnStage.aim;
-  //       playgoblinTurn();
-  //     } else if (isAlive(cueball)) {
-  //       cueball.turn = TurnStage.aim;
-  //       playCueTurn();
-  //     }
-  //   }
+    setTimeout(() => {
+      if (!valid) return;
+      if (won || lost) return;
+      if (isAlive(activeMonster)) {
+        console.log("attack!");
+        playgoblinTurn();
+        // const dx = cueball.x - activeMonster.x;
+        // const dy = cueball.y - activeMonster.y;
+        // const angle = Math.atan2(dy, dx);
 
-  //   console.log("setting timeout...");
+        // activeMonster.vx = activeMonster.speed * Math.cos(angle);
+        // activeMonster.vy = activeMonster.speed * Math.sin(angle);
+      }
 
-  //   setTimeout(() => {
-  //     if (!valid) return;
-  //     if (won || lost) return;
-  //     if (isAlive(activeMonster)) {
-  //       console.log("attack!");
-  //       playgoblinTurn();
-  //       // const dx = cueball.x - activeMonster.x;
-  //       // const dy = cueball.y - activeMonster.y;
-  //       // const angle = Math.atan2(dy, dx);
+      // probably losing the index here. and getting thrown off?
+      // const activeIndex = monsters.indexOf(activeMonster);
+      // const nextMonster = monsters[activeIndex + 1];
+      // console.log("next monster", nextMonster);
 
-  //       // activeMonster.vx = activeMonster.speed * Math.cos(angle);
-  //       // activeMonster.vy = activeMonster.speed * Math.sin(angle);
-  //     }
+      activeMonster.turn = TurnStage.attack;
 
-  //     // probably losing the index here. and getting thrown off?
-  //     const activeIndex = monsters.indexOf(activeMonster);
-  //     const nextMonster = monsters[activeIndex + 1];
-  //     console.log("next monster", nextMonster);
-
-  //     activeMonster.turn = TurnStage.attack;
-
-  //     if (nextMonster?.monster) nextMonster.active = true;
-  //     else if (cueball.hp > 0) cueball.active = true;
-  //     setBalls([...balls]);
-  //   }, 1500);
-  //   return () => void (valid = false);
-  // }, [activeMonster, moving]);
+      // setBalls([...balls]);
+    }, 1500);
+    return () => void (valid = false);
+  }, [activeMonster, moving]);
 
   const won = !monsters.some(isAlive);
   const lost = isDead(cueball);
@@ -104,6 +89,12 @@ function App() {
 
     playBallDrop();
   }, [level, setLevel]);
+
+  React.useEffect(() => {
+    if (level.hero.turn) console.log("hero's turn", level.hero.turn);
+    else if (activeMonster?.turn)
+      console.log("monster turn", activeMonster?.turn);
+  }, [level.hero.turn, activeMonster?.turn]);
 
   return (
     <div
