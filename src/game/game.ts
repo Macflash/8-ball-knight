@@ -1,3 +1,4 @@
+import React from "react";
 import { Knight } from "../levels/knight";
 import { orc } from "../levels/monsters";
 import { Ball, isMoving, move } from "../physics/ball";
@@ -25,14 +26,4 @@ export function level1(): GameState {
     table: new Table(400, 536),
     pockets: [],
   };
-}
-
-export function anythingMoving(game: GameState): boolean {
-  return isMoving(game.hero) || game.monsters.some(isMoving);
-}
-
-export function updateGame(game: GameState): GameState {
-  move(game.hero);
-  game.table.bounceBall(game.hero);
-  return { ...game };
 }

@@ -3,24 +3,15 @@ import React from "react";
 import { height, width, angleFromAtoB } from "./balls";
 import { playBallDrop, playCueTurn, playgoblinTurn } from "./sounds/audio";
 import { isAlive, isDead } from "./game/hp";
-import { anythingMoving, level1, updateGame } from "./game/game";
+import { level1 } from "./game/game";
 import { TurnStage } from "./game/turn";
 import { stickPng, tablePng } from "./images/misc";
 import { isMoving } from "./physics/ball";
+import { useGame } from "./game/move";
+import { HeroEl } from "./components/hero";
 
 function App() {
-  const [game, setGame] = React.useState(level1());
-  const moving = anythingMoving(game);
-
-  // Update the game physics while anything is moving.
-  React.useEffect(() => {
-    let valid = true;
-    requestAnimationFrame(() => {
-      if (!valid) return;
-      setGame(updateGame);
-    });
-    return () => void (valid = false);
-  }, [moving, game, setGame]);
+  const { game, setGame, moving } = useGame(level1());
 
   const cueball = game.hero;
   const monsters = game.monsters;
@@ -83,7 +74,6 @@ function App() {
 
   // moving check here is probably redundant now
   const aiming = cueball.turn == TurnStage.aim && !moving && !won && !lost;
-  const [dir, setDir] = React.useState(0);
 
   // TODO: Let you keep shooting if you pocket an enemy!
 
@@ -94,18 +84,22 @@ function App() {
 
   // Move balls
 
+  const dir = game.hero.aimDirection;
+  const setDir = (aimDirection: number) => {
+    // if (moving) return;
+    setGame({ ...game, hero: { ...game.hero, aimDirection } });
+  };
+
   const shoot = React.useCallback(() => {
     if (cueball.turn !== TurnStage.aim) return;
     // // shoot the cue ball
     const speed = 2;
-    const radians = ((90 - dir) * Math.PI) / 180;
+    const radians = ((90 - game.hero.aimDirection) * Math.PI) / 180;
     cueball.v.x = speed * Math.cos(radians);
     cueball.v.y = -speed * Math.sin(radians);
     // move active state!
     cueball.turn = TurnStage.attack;
 
-    // const nextMonster = monsters[0];
-    // if (nextMonster) nextMonster.active = true;
     setGame({ ...game });
 
     playBallDrop();
@@ -171,16 +165,12 @@ function App() {
           marginBottom: 32,
         }}
       >
+        <HeroEl hero={game.hero} />
         {[game.hero].map((ball, index) => (
           <div
             key={index}
             id={ball.hero ? "game-cue" : undefined}
             style={{
-              background: !moving && isAlive(ball) && ball.turn ? "yellow" : "",
-              boxShadow:
-                !moving && isAlive(ball) && ball.turn
-                  ? `0 0 ${0.5 * ball.r}px ${"yellow"}`
-                  : "",
               position: "absolute",
               marginLeft: ball.p.x - ball.r,
               marginTop: ball.p.y - ball.r,
@@ -199,22 +189,7 @@ function App() {
                 height={ball.r * 2.5}
               ></img>
             ) : undefined} */}
-            {isAlive(ball) && ball.images ? (
-              <img
-                style={{ marginTop: -0.1 * ball.r }}
-                src={
-                  (ball.hero && won ? ball.images.happy : null) ||
-                  // (ball.monster && lost ? ball.imgs.happy : null) ||
-                  (isMoving(ball) &&
-                    ball.turn == TurnStage.attack &&
-                    ball.images.attack) ||
-                  (isMoving(ball) && ball.images.surprised) ||
-                  (ball.h.p < 0.5 * ball.h.max ? ball.images.hurt : null) ||
-                  ball.images.normal
-                }
-                height={ball.r * 2.5}
-              ></img>
-            ) : undefined}
+
             {/* {ball.explode ? (
               <img
                 style={{ position: "absolute" }}
@@ -222,33 +197,6 @@ function App() {
                 height={ball.r * 4}
               />
             ) : null} */}
-            {isAlive(ball) ? (
-              <div
-                style={{
-                  position: "absolute",
-                  color: "white",
-                  top: -1 * ball.r,
-                  width: "max-content",
-                }}
-              >
-                {ball.h.p}♥️
-                {ball.attack ? ` ${ball.attack}🗡️` : undefined}
-              </div>
-            ) : undefined}
-            {ball.hero && aiming ? (
-              <img
-                src={stickPng}
-                height={ball.r * 10}
-                style={{
-                  position: "absolute",
-                  transform: `
-                    rotate(${dir - 41}deg)
-                     translate(-${4.15 * ball.r}px,
-                    ${5 * ball.r}px)`,
-                  zIndex: 2,
-                }}
-              />
-            ) : null}
           </div>
         ))}
       </div>

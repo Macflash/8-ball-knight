@@ -22,4 +22,6 @@ export const Knight: Hero = {
 
   attack: 2,
   maxSpeed: 2,
+
+  aimDirection: 0,
 };

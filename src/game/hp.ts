@@ -21,6 +21,10 @@ export function isAlive({ h }: { h: HP }): boolean {
   return h.p > 0;
 }
 
+export function isHurt({ h }: { h: HP }): boolean {
+  return h.p < 0.7 * h.max;
+}
+
 export function isDead({ h }: { h: HP }): boolean {
   return h.p <= 0;
 }

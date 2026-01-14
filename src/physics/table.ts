@@ -1,8 +1,18 @@
 import { Ball } from "./ball";
+import { magnitude, scale } from "./vec";
 
 export class Table {
+  private readonly friction = 0.002;
   private readonly bounce = -0.95;
   constructor(readonly width: number, readonly height: number) {}
+
+  slowBall(ball: Ball) {
+    const mag = magnitude(ball.v);
+    if (mag > 0) {
+      const newMag = Math.max(0, mag - this.friction);
+      ball.v = scale(ball.v, newMag / mag);
+    }
+  }
 
   bounceBall(ball: Ball): boolean {
     let bumped = false;

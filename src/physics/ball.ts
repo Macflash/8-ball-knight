@@ -1,5 +1,14 @@
-import { magnitude } from "../balls";
-import { add, distance, dot, normal, scale, subtract, vec, Vec } from "./vec";
+import {
+  add,
+  magnitude,
+  distance,
+  dot,
+  normal,
+  scale,
+  subtract,
+  vec,
+  Vec,
+} from "./vec";
 
 export interface Ball {
   /** Mass */

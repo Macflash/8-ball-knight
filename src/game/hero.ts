@@ -13,6 +13,8 @@ export interface Hero extends Ball {
   images: HeroImages;
   sounds: HeroSounds;
 
+  aimDirection: number;
+
   turn?: TurnStage;
 }
 
