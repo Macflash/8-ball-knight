@@ -13,6 +13,8 @@ import goblinhurt from "./goblinhurt.mp3";
 import orcturn from "./orcturn.mp3";
 import orchurt from "./orchurt.mp3";
 
+export const pocketMp3 = pocket;
+
 export const hero_sounds = {
   turn: cueturn,
   attack: cuehurt,

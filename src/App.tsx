@@ -3,15 +3,15 @@ import React from "react";
 import { height, width, angleFromAtoB } from "./balls";
 import { playBallDrop, playCueTurn, playgoblinTurn } from "./sounds/audio";
 import { isAlive, isDead } from "./game/hp";
-import { level1 } from "./game/game";
 import { TurnStage } from "./game/turn";
-import { stickPng, tablePng } from "./images/misc";
-import { isMoving } from "./physics/ball";
+import { tablePng } from "./images/misc";
 import { useGame } from "./game/move";
 import { HeroEl } from "./components/hero";
+import { MonsterEl } from "./components/monster";
+import { getLevel } from "./levels/levels";
 
 function App() {
-  const { game, setGame, moving } = useGame(level1());
+  const { game, setGame, moving } = useGame(getLevel(1));
 
   const cueball = game.hero;
   const monsters = game.monsters;
@@ -166,6 +166,9 @@ function App() {
         }}
       >
         <HeroEl hero={game.hero} />
+        {game.monsters.map((m, i) => (
+          <MonsterEl key={i} monster={m} />
+        ))}
         {[game.hero].map((ball, index) => (
           <div
             key={index}

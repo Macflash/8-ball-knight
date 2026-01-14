@@ -1,17 +1,25 @@
 import { width, height, BALL_RADIUS } from "../balls";
-
-import rock from "../images/misc/rock.png";
+import { Pocket } from "../game/pocket";
+import { explosionPng, rockPng } from "../images/misc";
+import { vec } from "../physics/vec";
+import { pocketMp3 } from "../sounds/audio";
 
 // TODO: don't hard code these widths/heights, isntead allow multiple table sizes & configurations.
 
-const pocket = {
-  hole: true,
-  imgs: {
-    blocked: rock,
+const pocket: Pocket = {
+  pocket: true,
+  images: {
+    blocked: rockPng,
+    explode: explosionPng,
   },
-  color: "black",
-  x: 0,
-  y: 0,
+  sounds: {
+    pocket: pocketMp3,
+  },
+  p: vec(),
+  v: vec(),
+  r: BALL_RADIUS,
+  m: 0,
+  blocked: false,
 };
 
 export const pockets = () => [
@@ -32,9 +40,9 @@ export const pockets = () => [
   { ...pocket, x: width, y: height },
 ];
 
-export function blockPockets(ints) {
+export function blockPockets(indices: number[]) {
   const p = pockets();
-  for (const i of ints) {
+  for (const i of indices) {
     p[i].blocked = true;
   }
   return p;
