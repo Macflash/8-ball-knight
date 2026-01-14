@@ -1,4 +1,4 @@
-import { HP } from "../game/hp";
+import { HP } from "../game/types/hp";
 
 export function StatusEl({
   h,

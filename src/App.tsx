@@ -2,19 +2,19 @@ import "./App.css";
 import React from "react";
 import { height, width, angleFromAtoB } from "./balls";
 import { playBallDrop, playCueTurn, playgoblinTurn } from "./sounds/audio";
-import { isAlive, isDead } from "./game/hp";
-import { TurnStage } from "./game/turn";
+import { isAlive, isDead } from "./game/types/hp";
+import { TurnStage } from "./game/types/turn";
 import { tablePng } from "./images/misc";
-import { useGame } from "./game/move";
+import { useMoveLevel } from "./game/hooks/useMoveLevel";
 import { HeroEl } from "./components/hero";
 import { MonsterEl } from "./components/monster";
-import { getLevel } from "./levels/levels";
+import { getLevel } from "./game/levels/level_defs";
 
 function App() {
-  const { game, setGame, moving } = useGame(getLevel(1));
+  const { level, setLevel, moving } = useMoveLevel(getLevel(1));
 
-  const cueball = game.hero;
-  const monsters = game.monsters;
+  const cueball = level.hero;
+  const monsters = level.monsters;
   const activeMonster = monsters.find((ball) => ball.turn);
 
   // Aim and move enemies when it is their turn
@@ -84,26 +84,26 @@ function App() {
 
   // Move balls
 
-  const dir = game.hero.aimDirection;
+  const dir = level.hero.aimDirection;
   const setDir = (aimDirection: number) => {
     // if (moving) return;
-    setGame({ ...game, hero: { ...game.hero, aimDirection } });
+    setLevel({ ...level, hero: { ...level.hero, aimDirection } });
   };
 
   const shoot = React.useCallback(() => {
     if (cueball.turn !== TurnStage.aim) return;
     // // shoot the cue ball
     const speed = 2;
-    const radians = ((90 - game.hero.aimDirection) * Math.PI) / 180;
+    const radians = ((90 - level.hero.aimDirection) * Math.PI) / 180;
     cueball.v.x = speed * Math.cos(radians);
     cueball.v.y = -speed * Math.sin(radians);
     // move active state!
     cueball.turn = TurnStage.attack;
 
-    setGame({ ...game });
+    setLevel({ ...level });
 
     playBallDrop();
-  }, [game, setGame]);
+  }, [level, setLevel]);
 
   return (
     <div
@@ -165,11 +165,11 @@ function App() {
           marginBottom: 32,
         }}
       >
-        <HeroEl hero={game.hero} />
-        {game.monsters.map((m, i) => (
+        <HeroEl hero={level.hero} />
+        {level.monsters.map((m, i) => (
           <MonsterEl key={i} monster={m} />
         ))}
-        {[game.hero].map((ball, index) => (
+        {[level.hero].map((ball, index) => (
           <div
             key={index}
             id={ball.hero ? "game-cue" : undefined}

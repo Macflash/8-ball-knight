@@ -1,5 +1,5 @@
 import React from "react";
-import { Ball } from "../physics/ball";
+import { Ball } from "../game/physics/ball";
 
 export function BallEl({
   ball,

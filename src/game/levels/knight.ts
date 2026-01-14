@@ -1,10 +1,10 @@
-import { width } from "../balls";
-import { Hero } from "../game/hero";
-import { hp } from "../game/hp";
-import { imgs } from "../images/cue/def";
+import { width } from "../../balls";
+import { Hero } from "../types/hero";
+import { hp } from "../types/hp";
+import { imgs } from "../../images/cue/def";
 import { ball } from "../physics/ball";
 import { vec } from "../physics/vec";
-import { hero_sounds } from "../sounds/audio";
+import { hero_sounds } from "../../sounds/audio";
 
 // TODO: maybe only take like 1HP damage and lose a turn if you scratch
 // EXCEPT last turn probably? MAYBE just on boss levels as it gets a bit annoying.

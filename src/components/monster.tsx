@@ -1,10 +1,10 @@
 import { BallEl } from "./ball";
-import { isAlive, isDead, isHurt } from "../game/hp";
-import { isMoving } from "../physics/ball";
-import { TurnStage } from "../game/turn";
+import { isAlive, isDead, isHurt } from "../game/types/hp";
+import { isMoving } from "../game/physics/ball";
+import { TurnStage } from "../game/types/turn";
 import { StatusEl } from "./status";
 import { stickPng } from "../images/misc";
-import { Monster } from "../game/monster";
+import { Monster } from "../game/types/monster";
 
 export function MonsterEl({ monster }: { monster: Monster }) {
   return (

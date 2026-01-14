@@ -1,8 +1,8 @@
-import { width, height, BALL_RADIUS } from "../balls";
-import { Pocket } from "../game/pocket";
-import { explosionPng, rockPng } from "../images/misc";
+import { width, height, BALL_RADIUS } from "../../balls";
+import { Pocket } from "../types/pocket";
+import { explosionPng, rockPng } from "../../images/misc";
 import { vec } from "../physics/vec";
-import { pocketMp3 } from "../sounds/audio";
+import { pocketMp3 } from "../../sounds/audio";
 
 // TODO: don't hard code these widths/heights, isntead allow multiple table sizes & configurations.
 

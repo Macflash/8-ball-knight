@@ -1,9 +1,9 @@
 import React from "react";
-import { Hero } from "../game/hero";
+import { Hero } from "../game/types/hero";
 import { BallEl } from "./ball";
-import { isAlive, isDead, isHurt } from "../game/hp";
-import { isMoving } from "../physics/ball";
-import { TurnStage } from "../game/turn";
+import { isAlive, isDead, isHurt } from "../game/types/hp";
+import { isMoving } from "../game/physics/ball";
+import { TurnStage } from "../game/types/turn";
 import { StatusEl } from "./status";
 import { stickPng } from "../images/misc";
 

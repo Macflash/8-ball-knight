@@ -1,9 +1,9 @@
-import { hp } from "../game/hp";
-import { Monster } from "../game/monster";
-import { imgs as goblin_imgs } from "../images/goblin/def";
-import { imgs as orc_imgs } from "../images/orc/def";
+import { hp } from "../types/hp";
+import { Monster } from "../types/monster";
+import { imgs as goblin_imgs } from "../../images/goblin/def";
+import { imgs as orc_imgs } from "../../images/orc/def";
 import { ball } from "../physics/ball";
-import { goblin_sounds } from "../sounds/audio";
+import { goblin_sounds } from "../../sounds/audio";
 
 // Monsters!
 export const goblin: Monster = {

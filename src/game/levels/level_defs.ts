@@ -1,13 +1,13 @@
-import { width } from "../balls";
-import { GameState } from "../game/game";
-import { TurnStage } from "../game/turn";
+import { width } from "../../balls";
+import { Level } from "./level";
+import { TurnStage } from "../types/turn";
 import { Table } from "../physics/table";
 import { vec } from "../physics/vec";
 import { Knight } from "./knight";
 import { goblin, orc } from "./monsters";
 import { blockPockets } from "./pockets";
 
-export function getLevel(n: number): GameState {
+export function getLevel(n: number): Level {
   return {
     hero: { ...Knight, p: vec(200, 300), turn: TurnStage.aim },
     table: new Table(400, 536),
