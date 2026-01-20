@@ -11,7 +11,7 @@ import { hero_sounds } from "../../sounds/audio";
 // 8 ball is a boss who you can't kill until all the other ones are dead.
 // PROTECT mission? where you have helpers or maybe have to protect your own 8 ball?
 // 8 ball could be a dark hero you unlock later or play as? like necromancer style?
-export const Knight: Hero = {
+export const Knight: () => Hero = () => ({
   ...ball(30, 50),
   hero: true,
 
@@ -24,4 +24,4 @@ export const Knight: Hero = {
   maxSpeed: 2,
 
   aimDirection: 0,
-};
+});

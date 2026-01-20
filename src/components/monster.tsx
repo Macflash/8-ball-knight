@@ -9,10 +9,9 @@ export function MonsterEl({ monster }: { monster: Monster }) {
   return (
     <BallEl
       ball={monster}
-      id="game-cue"
       background={isAlive(monster) && monster.turn ? "red" : undefined}
     >
-      <StatusEl {...monster} />
+      {isAlive(monster) ? <StatusEl {...monster} /> : undefined}
       <MonsterImage monster={monster} />
     </BallEl>
   );

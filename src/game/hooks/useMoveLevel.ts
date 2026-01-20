@@ -1,15 +1,17 @@
 import React from "react";
-import { collide, isMoving, move } from "../physics/ball";
+import { collide, move } from "../physics/ball";
 import { anythingMoving, Level } from "../levels/level";
 import { playBallHit, playgoblinHurt } from "../../sounds/audio";
 import { Hero } from "../types/hero";
 import { Monster } from "../types/monster";
-import { isAttacking, notAttacking, TurnStage } from "../types/turn";
-import { damage, isDead } from "../types/hp";
+import { isAiming, isAttacking } from "../types/turn";
+import { damage, isAlive, isDead } from "../types/hp";
 
 export function useMoveLevel(initial: Level) {
   const [level, setLevel] = React.useState(initial);
   const moving = anythingMoving(level);
+  const aiming = isAiming(level.hero);
+  console.log("eyy", level.n, aiming);
 
   // Update the level physics while anything is moving.
   React.useEffect(() => {
@@ -26,7 +28,7 @@ export function useMoveLevel(initial: Level) {
 
   return {
     level,
-    setLevel, // TODO: this shouldn't be called if anything is moving??
+    setLevel,
     moving,
   };
 }
@@ -38,8 +40,7 @@ function tickLevel(level: Level): Level {
   move(hero);
 
   // Move the monsters and check for collisions with the hero
-  for (const monster of monsters) {
-    if (isDead(monster)) continue;
+  for (const monster of monsters.filter(isAlive)) {
     move(monster);
     const hit = collide(hero, monster);
     if (hit && isAttacking(hero)) heroAttack(hero, monster);
@@ -48,7 +49,9 @@ function tickLevel(level: Level): Level {
 
   // Check for collisions between the monsters
   for (let i = 0; i < monsters.length; i++) {
+    if (isDead(monsters[i])) continue;
     for (let j = i + 1; j < monsters.length; j++) {
+      if (isDead(monsters[j])) continue;
       const hit = collide(monsters[i], monsters[j]);
       if (hit) playBallHit();
     }

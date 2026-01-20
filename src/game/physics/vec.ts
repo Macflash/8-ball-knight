@@ -23,6 +23,12 @@ export function angle(v: Vec): number {
   return Math.atan2(v.y, v.x);
 }
 
+/** @returns angle of a vector in radians */
+export function fromCueAngle(dirDegrees: number, speed: number): Vec {
+  const radians = ((90 - dirDegrees) * Math.PI) / 180;
+  return vec(speed * Math.cos(radians), -speed * Math.sin(radians));
+}
+
 /** @returns a new vector (a - b) */
 export function add(a: Vec, b: Vec): Vec {
   return { x: a.x + b.x, y: a.y + b.y };

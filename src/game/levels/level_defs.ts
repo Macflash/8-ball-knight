@@ -9,7 +9,8 @@ import { blockPockets } from "./pockets";
 
 export function getLevel(n: number): Level {
   return {
-    hero: { ...Knight, p: vec(200, 300), turn: TurnStage.aim },
+    n,
+    hero: { ...Knight(), p: vec(200, 300), turn: TurnStage.aim },
     table: new Table(400, 536),
 
     monsters: monsters[n]?.() || [],

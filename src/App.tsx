@@ -3,7 +3,7 @@ import React from "react";
 import { height, width, angleFromAtoB } from "./balls";
 import { playBallDrop, playCueTurn, playgoblinTurn } from "./sounds/audio";
 import { isAlive, isDead } from "./game/types/hp";
-import { TurnStage } from "./game/types/turn";
+import { isAiming, TurnStage } from "./game/types/turn";
 import { tablePng } from "./images/misc";
 import { useMoveLevel } from "./game/hooks/useMoveLevel";
 import { HeroEl } from "./components/hero";
@@ -11,91 +11,41 @@ import { MonsterEl } from "./components/monster";
 import { getLevel } from "./game/levels/level_defs";
 import { useActiveMonster } from "./game/hooks/useEnemyTurn";
 import { useHeroTurn } from "./game/hooks/useHeroTurn";
+import { fromCueAngle } from "./game/physics/vec";
+import { getLevelState } from "./game/levels/level";
+import { PocketEl } from "./components/pocket";
 
 function App() {
-  const { level, setLevel, moving } = useMoveLevel(getLevel(1));
+  const [levelNum, setLevelNum] = React.useState(0);
+  const { level, setLevel, moving } = useMoveLevel(getLevel(levelNum));
+
+  console.log("wtf", level.n, levelNum);
 
   const { hero } = useHeroTurn(level, setLevel);
-  const monsters = level.monsters;
-
   const { activeMonster } = useActiveMonster(level, setLevel);
 
-  // Aim and move enemies when it is their turn
-  React.useEffect(() => {
-    let valid = true;
+  const { won, lost } = getLevelState(level);
 
-    if (moving) return;
-    if (!activeMonster) return;
-
-    console.log("setting timeout...");
-
-    setTimeout(() => {
-      if (!valid) return;
-      if (won || lost) return;
-      if (isAlive(activeMonster) && activeMonster.turn == TurnStage.aim) {
-        console.log("attack!");
-        playgoblinTurn();
-        const dx = hero.p.x - activeMonster.p.x;
-        const dy = hero.p.y - activeMonster.p.y;
-        const angle = Math.atan2(dy, dx);
-
-        activeMonster.v.x = activeMonster.speed * Math.cos(angle);
-        activeMonster.v.y = activeMonster.speed * Math.sin(angle);
-      }
-
-      // probably losing the index here. and getting thrown off?
-      // const activeIndex = monsters.indexOf(activeMonster);
-      // const nextMonster = monsters[activeIndex + 1];
-      // console.log("next monster", nextMonster);
-
-      activeMonster.turn = TurnStage.attack;
-      setLevel({ ...level });
-      // setBalls([...balls]);
-    }, 1500);
-    return () => void (valid = false);
-  }, [activeMonster, moving]);
-
-  const won = !monsters.some(isAlive);
-  const lost = isDead(hero);
-
-  // moving check here is probably redundant now
-  const aiming = hero.turn == TurnStage.aim && !moving && !won && !lost;
-
-  // TODO: Let you keep shooting if you pocket an enemy!
-
-  // Ball turn
-  // AIM
-  // ATTACK
-  // RESOLVE <-- this is when we change turns!
-
-  // Move balls
-
+  // TBH we could keep this as some separate state...
+  // and pass it to the cuestick. but whatever this works for now?
   const dir = level.hero.aimDirection;
   const setDir = (aimDirection: number) => {
-    // if (moving) return;
+    if (won || lost) return;
+    // OMG this was it. jesus christ.
     setLevel({ ...level, hero: { ...level.hero, aimDirection } });
   };
 
+  // TODO: Let you keep shooting if you pocket an enemy!
   const shoot = React.useCallback(() => {
-    if (hero.turn !== TurnStage.aim) return;
-    // // shoot the cue ball
-    const speed = 2;
-    const radians = ((90 - level.hero.aimDirection) * Math.PI) / 180;
-    hero.v.x = speed * Math.cos(radians);
-    hero.v.y = -speed * Math.sin(radians);
-    // move active state!
+    if (!isAiming(hero)) return;
+
+    // shoot the cue ball
+    hero.v = fromCueAngle(hero.aimDirection, hero.maxSpeed);
     hero.turn = TurnStage.attack;
 
     setLevel({ ...level });
-
     playBallDrop();
   }, [level, setLevel]);
-
-  React.useEffect(() => {
-    if (level.hero.turn) console.log("hero's turn", level.hero.turn);
-    else if (activeMonster?.turn)
-      console.log("monster turn", activeMonster?.turn);
-  }, [level.hero.turn, activeMonster?.turn]);
 
   return (
     <div
@@ -123,11 +73,7 @@ function App() {
         const degrees = (angle * 180) / Math.PI;
         setDir(degrees + 90);
       }}
-      onMouseDown={() => {
-        if (aiming) {
-          shoot();
-        }
-      }}
+      onMouseDown={shoot}
       onKeyDown={(e) => {
         if (moving) return;
         if (!hero.turn) return;
@@ -136,6 +82,7 @@ function App() {
         if (e.key === "ArrowLeft" || e.key === "a") {
           setDir(dir + 3);
         }
+
         if (e.key === "ArrowRight" || e.key === "d") {
           setDir(dir - 3);
         }
@@ -161,38 +108,8 @@ function App() {
         {level.monsters.map((m, i) => (
           <MonsterEl key={i} monster={m} />
         ))}
-        {[level.hero].map((ball, index) => (
-          <div
-            key={index}
-            id={ball.hero ? "game-cue" : undefined}
-            style={{
-              position: "absolute",
-              marginLeft: ball.p.x - ball.r,
-              marginTop: ball.p.y - ball.r,
-              height: ball.r * 2,
-              width: ball.r * 2,
-              borderRadius: ball.r,
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {/* {ball.hole && ball.blocked ? (
-              <img
-                style={{ marginTop: -0.1 * ball.r }}
-                src={ball.imgs.blocked}
-                height={ball.r * 2.5}
-              ></img>
-            ) : undefined} */}
-
-            {/* {ball.explode ? (
-              <img
-                style={{ position: "absolute" }}
-                src={explosion}
-                height={ball.r * 4}
-              />
-            ) : null} */}
-          </div>
+        {level.pockets.map((pocket, i) => (
+          <PocketEl pocket={pocket} key={i} />
         ))}
       </div>
       {won ? (
@@ -201,8 +118,9 @@ function App() {
           <div>
             <button
               onClick={() => {
-                // setLevel(level + 1);
-                // setBalls(getLevel(level + 1));
+                const newLevel = levelNum + 1;
+                setLevelNum(newLevel);
+                setLevel(getLevel(newLevel));
                 setDir(0);
               }}
             >
@@ -218,8 +136,8 @@ function App() {
           <br />
           <button
             onClick={() => {
-              // setLevel(0);
-              // setBalls(getLevel(0));
+              setLevelNum(0);
+              setLevel(getLevel(0));
               setDir(0);
             }}
           >
@@ -228,7 +146,7 @@ function App() {
         </div>
       ) : null}
 
-      {/* <div
+      <div
         style={{
           position: "absolute",
           top: 0,
@@ -236,8 +154,8 @@ function App() {
           fontSize: "2rem",
         }}
       >
-        Level {level + 1}
-      </div> */}
+        Level {levelNum}
+      </div>
     </div>
   );
 }
