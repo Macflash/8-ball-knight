@@ -3,7 +3,6 @@ import { isAlive, isDead, isHurt } from "../game/types/hp";
 import { isMoving } from "../game/physics/ball";
 import { TurnStage } from "../game/types/turn";
 import { StatusEl } from "./status";
-import { stickPng } from "../images/misc";
 import { Monster } from "../game/types/monster";
 
 export function MonsterEl({ monster }: { monster: Monster }) {
@@ -26,8 +25,7 @@ function MonsterImage({ monster }: { monster: Monster }) {
   let image = images.normal;
   if (isHurt(monster)) image = images.hurt;
   if (isMoving(monster)) image = images.surprised;
-  if (isMoving(monster) && monster.turn == TurnStage.attack)
-    image = images.attack;
+  if (monster.turn == TurnStage.attack) image = images.attack;
 
   return (
     <img

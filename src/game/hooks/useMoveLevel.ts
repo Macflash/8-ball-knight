@@ -1,7 +1,11 @@
 import React from "react";
 import { collide, isMoving, move } from "../physics/ball";
 import { anythingMoving, Level } from "../levels/level";
-import { playBallHit } from "../../sounds/audio";
+import { playBallHit, playgoblinHurt } from "../../sounds/audio";
+import { Hero } from "../types/hero";
+import { Monster } from "../types/monster";
+import { isAttacking, notAttacking, TurnStage } from "../types/turn";
+import { damage, isDead } from "../types/hp";
 
 export function useMoveLevel(initial: Level) {
   const [level, setLevel] = React.useState(initial);
@@ -14,7 +18,8 @@ export function useMoveLevel(initial: Level) {
     let valid = true;
     requestAnimationFrame(() => {
       if (!valid) return;
-      setLevel(tickLevel);
+      if (!anythingMoving(level)) {
+      } else setLevel(tickLevel);
     });
     return () => void (valid = false);
   }, [moving, level, setLevel]);
@@ -34,9 +39,11 @@ function tickLevel(level: Level): Level {
 
   // Move the monsters and check for collisions with the hero
   for (const monster of monsters) {
+    if (isDead(monster)) continue;
     move(monster);
     const hit = collide(hero, monster);
-    if (hit) playBallHit();
+    if (hit && isAttacking(hero)) heroAttack(hero, monster);
+    else if (hit) playBallHit();
   }
 
   // Check for collisions between the monsters
@@ -54,4 +61,9 @@ function tickLevel(level: Level): Level {
   monsters.forEach((m) => table.slowBall(m));
 
   return { ...level };
+}
+
+function heroAttack(hero: Hero, monster: Monster) {
+  damage(monster.h, hero.attack);
+  playgoblinHurt();
 }

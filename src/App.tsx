@@ -10,14 +10,15 @@ import { HeroEl } from "./components/hero";
 import { MonsterEl } from "./components/monster";
 import { getLevel } from "./game/levels/level_defs";
 import { useActiveMonster } from "./game/hooks/useEnemyTurn";
+import { useHeroTurn } from "./game/hooks/useHeroTurn";
 
 function App() {
   const { level, setLevel, moving } = useMoveLevel(getLevel(1));
 
-  const cueball = level.hero;
+  const { hero } = useHeroTurn(level, setLevel);
   const monsters = level.monsters;
 
-  const { activeMonster } = useActiveMonster(level);
+  const { activeMonster } = useActiveMonster(level, setLevel);
 
   // Aim and move enemies when it is their turn
   React.useEffect(() => {
@@ -31,15 +32,15 @@ function App() {
     setTimeout(() => {
       if (!valid) return;
       if (won || lost) return;
-      if (isAlive(activeMonster)) {
+      if (isAlive(activeMonster) && activeMonster.turn == TurnStage.aim) {
         console.log("attack!");
         playgoblinTurn();
-        // const dx = cueball.x - activeMonster.x;
-        // const dy = cueball.y - activeMonster.y;
-        // const angle = Math.atan2(dy, dx);
+        const dx = hero.p.x - activeMonster.p.x;
+        const dy = hero.p.y - activeMonster.p.y;
+        const angle = Math.atan2(dy, dx);
 
-        // activeMonster.vx = activeMonster.speed * Math.cos(angle);
-        // activeMonster.vy = activeMonster.speed * Math.sin(angle);
+        activeMonster.v.x = activeMonster.speed * Math.cos(angle);
+        activeMonster.v.y = activeMonster.speed * Math.sin(angle);
       }
 
       // probably losing the index here. and getting thrown off?
@@ -48,17 +49,17 @@ function App() {
       // console.log("next monster", nextMonster);
 
       activeMonster.turn = TurnStage.attack;
-
+      setLevel({ ...level });
       // setBalls([...balls]);
     }, 1500);
     return () => void (valid = false);
   }, [activeMonster, moving]);
 
   const won = !monsters.some(isAlive);
-  const lost = isDead(cueball);
+  const lost = isDead(hero);
 
   // moving check here is probably redundant now
-  const aiming = cueball.turn == TurnStage.aim && !moving && !won && !lost;
+  const aiming = hero.turn == TurnStage.aim && !moving && !won && !lost;
 
   // TODO: Let you keep shooting if you pocket an enemy!
 
@@ -76,14 +77,14 @@ function App() {
   };
 
   const shoot = React.useCallback(() => {
-    if (cueball.turn !== TurnStage.aim) return;
+    if (hero.turn !== TurnStage.aim) return;
     // // shoot the cue ball
     const speed = 2;
     const radians = ((90 - level.hero.aimDirection) * Math.PI) / 180;
-    cueball.v.x = speed * Math.cos(radians);
-    cueball.v.y = -speed * Math.sin(radians);
+    hero.v.x = speed * Math.cos(radians);
+    hero.v.y = -speed * Math.sin(radians);
     // move active state!
-    cueball.turn = TurnStage.attack;
+    hero.turn = TurnStage.attack;
 
     setLevel({ ...level });
 
@@ -114,8 +115,8 @@ function App() {
       onMouseMove={(e) => {
         const tablePos = document.getElementById("game-table")!;
         const cuepos = {
-          x: tablePos.offsetLeft + cueball.p.x,
-          y: tablePos.offsetTop + cueball.p.y,
+          x: tablePos.offsetLeft + hero.p.x,
+          y: tablePos.offsetTop + hero.p.y,
         };
         const m = { x: e.clientX, y: e.clientY };
         const angle = angleFromAtoB(m, cuepos);
@@ -129,7 +130,7 @@ function App() {
       }}
       onKeyDown={(e) => {
         if (moving) return;
-        if (!cueball.turn) return;
+        if (!hero.turn) return;
 
         // console.log("key", e.key, dir);
         if (e.key === "ArrowLeft" || e.key === "a") {

@@ -18,35 +18,35 @@ export function getLevel(n: number): Level {
 }
 
 const monsters = [
-  () => [{ ...orc, p: vec(width / 2, 100) }],
+  () => [{ ...orc(), p: vec(width / 2, 100) }],
 
   () => [
-    { ...goblin, p: vec(width / 3, 100) },
-    { ...goblin, p: vec((width * 2) / 3, 100) },
+    { ...goblin(), p: vec(width / 3, 100) },
+    { ...goblin(), p: vec((width * 2) / 3, 100) },
   ],
 
   () => [
-    { ...orc, p: vec(width / 2, 200) },
-    { ...goblin, p: vec(width / 3, 100) },
-    { ...goblin, p: vec((width * 2) / 3, 100) },
+    { ...orc(), p: vec(width / 2, 200) },
+    { ...goblin(), p: vec(width / 3, 100) },
+    { ...goblin(), p: vec((width * 2) / 3, 100) },
   ],
 
   () => [
-    { ...orc, p: vec(width / 2, 200) },
-    { ...orc, p: vec(width / 3, 150) },
-    { ...orc, p: vec((width * 2) / 3, 150) },
-    { ...goblin, p: vec(width / 4, 100) },
-    { ...goblin, p: vec(width / 2, 100) },
-    { ...goblin, p: vec((width * 3) / 4, 100) },
+    { ...orc(), p: vec(width / 2, 200) },
+    { ...orc(), p: vec(width / 3, 150) },
+    { ...orc(), p: vec((width * 2) / 3, 150) },
+    { ...goblin(), p: vec(width / 4, 100) },
+    { ...goblin(), p: vec(width / 2, 100) },
+    { ...goblin(), p: vec((width * 3) / 4, 100) },
   ],
 
   () => [
-    { ...goblin, p: vec(width / 2, 200) },
-    { ...goblin, p: vec(width / 3, 150) },
-    { ...goblin, p: vec((width * 2) / 3, 150) },
-    { ...goblin, p: vec(width / 4, 100) },
-    { ...goblin, p: vec(width / 2, 100) },
-    { ...goblin, p: vec((width * 3) / 4, 100) },
+    { ...goblin(), p: vec(width / 2, 200) },
+    { ...goblin(), p: vec(width / 3, 150) },
+    { ...goblin(), p: vec((width * 2) / 3, 150) },
+    { ...goblin(), p: vec(width / 4, 100) },
+    { ...goblin(), p: vec(width / 2, 100) },
+    { ...goblin(), p: vec((width * 3) / 4, 100) },
   ],
 ];
 

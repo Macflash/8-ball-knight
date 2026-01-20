@@ -2,27 +2,12 @@ import React from "react";
 import { anythingMoving, Level } from "../levels/level";
 import { isAlive, isDead } from "../types/hp";
 import { TurnStage } from "../types/turn";
-import { Vec } from "../physics/vec";
-import { isMoving } from "../physics/ball";
-import { magnitude } from "../../balls";
-
-function stopAttackingWhenStill({ v, turn }: { v: Vec; turn?: TurnStage }) {
-  if (turn == TurnStage.attack && !magnitude(v)) {
-    turn = TurnStage.resolve;
-  }
-}
-
-function pickNextActive(level: Level) {
-  if (anythingMoving(level)) return;
-
-  const { hero, monsters } = level;
-  if (hero.turn == TurnStage.resolve) {
-    // not moving & resolve means it is OVER!
-  }
-}
 
 /** Selects the next living monster, OR the hero. */
-export function useActiveMonster(level: Level) {
+export function useActiveMonster(
+  level: Level,
+  setLevel: (level: Level) => void
+) {
   const moving = anythingMoving(level);
 
   const { monsters, hero } = level;
@@ -30,13 +15,16 @@ export function useActiveMonster(level: Level) {
 
   React.useEffect(() => {
     if (moving) return;
-    if (!activeMonster) return;
-    console.log("checking active monster", activeMonster);
+    if (hero.turn) return;
 
-    // TODO: what about their turn is just... over?
-    if (isDead(activeMonster)) {
-      activeMonster.turn = TurnStage.inactive;
-      const activeIndex = monsters.indexOf(activeMonster);
+    if (
+      !activeMonster ||
+      isDead(activeMonster) ||
+      activeMonster.turn == TurnStage.attack ||
+      activeMonster.turn == TurnStage.resolve
+    ) {
+      if (activeMonster) activeMonster.turn = TurnStage.inactive;
+      const activeIndex = activeMonster ? monsters.indexOf(activeMonster) : -1;
       const nextMonster = monsters[activeIndex + 1];
 
       if (nextMonster?.monster) {
@@ -44,6 +32,9 @@ export function useActiveMonster(level: Level) {
       } else if (isAlive(hero)) {
         hero.turn = TurnStage.aim;
       }
+
+      setLevel({ ...level });
+      return;
     }
   }, [moving, activeMonster, hero.turn]);
 

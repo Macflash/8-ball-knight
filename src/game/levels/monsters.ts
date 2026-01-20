@@ -6,7 +6,7 @@ import { ball } from "../physics/ball";
 import { goblin_sounds } from "../../sounds/audio";
 
 // Monsters!
-export const goblin: Monster = {
+export const goblin: () => Monster = () => ({
   ...ball(30, 50),
   monster: true,
 
@@ -17,9 +17,9 @@ export const goblin: Monster = {
   attack: 1,
   speed: 1,
   ranged: true,
-};
+});
 
-export const orc: Monster = {
+export const orc: () => Monster = () => ({
   ...ball(40, 70),
   monster: true,
 
@@ -30,4 +30,4 @@ export const orc: Monster = {
   attack: 2,
   speed: 0.5,
   ranged: false,
-};
+});
