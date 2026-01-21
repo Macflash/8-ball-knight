@@ -1,5 +1,6 @@
 import React from "react";
 import { Ball } from "../game/physics/ball";
+import { Vec } from "../game/physics/vec";
 
 export function BallEl({
   ball,
@@ -7,7 +8,7 @@ export function BallEl({
   id,
   background,
 }: {
-  ball: Ball;
+  ball: { r: number; p: Vec };
   id?: string;
   children?: React.ReactNode;
   background?: string;

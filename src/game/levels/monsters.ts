@@ -6,6 +6,9 @@ import { ball } from "../physics/ball";
 import { goblin_sounds } from "../../sounds/audio";
 
 // Monsters!
+// 30 = default radius
+// 50 = default mass
+
 export const goblin: () => Monster = () => ({
   ...ball(30, 50),
   monster: true,
@@ -20,7 +23,7 @@ export const goblin: () => Monster = () => ({
 });
 
 export const orc: () => Monster = () => ({
-  ...ball(40, 70),
+  ...ball(30, 50),
   monster: true,
 
   images: orc_imgs,

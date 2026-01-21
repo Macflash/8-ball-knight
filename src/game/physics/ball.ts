@@ -23,6 +23,9 @@ export interface Ball {
   /** Velocity */
   v: Vec;
 
+  /** Angular momentum? */
+  a: Vec;
+
   // TODO: Spin? Z?
 }
 
@@ -32,6 +35,7 @@ export function ball(r = 1, m = 1): Ball {
     r,
     p: vec(),
     v: vec(),
+    a: vec(),
   };
 }
 

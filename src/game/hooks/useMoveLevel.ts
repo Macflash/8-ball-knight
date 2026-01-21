@@ -6,12 +6,12 @@ import { Hero } from "../types/hero";
 import { Monster } from "../types/monster";
 import { isAiming, isAttacking } from "../types/turn";
 import { damage, isAlive, isDead } from "../types/hp";
+import { magnitude } from "../physics/vec";
 
 export function useMoveLevel(initial: Level) {
   const [level, setLevel] = React.useState(initial);
   const moving = anythingMoving(level);
   const aiming = isAiming(level.hero);
-  console.log("eyy", level.n, aiming);
 
   // Update the level physics while anything is moving.
   React.useEffect(() => {
@@ -33,6 +33,10 @@ export function useMoveLevel(initial: Level) {
   };
 }
 
+function round(n: number, x: number = 10) {
+  return Math.floor(n * x) / x;
+}
+
 function tickLevel(level: Level): Level {
   const { hero, table, monsters } = level;
 
@@ -45,6 +49,8 @@ function tickLevel(level: Level): Level {
     const hit = collide(hero, monster);
     if (hit && isAttacking(hero)) heroAttack(hero, monster);
     else if (hit) playBallHit();
+
+    if (hit) console.log(round(magnitude(hero.v)), round(magnitude(hero.a)));
   }
 
   // Check for collisions between the monsters

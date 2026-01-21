@@ -16,9 +16,7 @@ const pocket: Pocket = {
     pocket: pocketMp3,
   },
   p: vec(),
-  v: vec(),
   r: BALL_RADIUS,
-  m: 0,
   blocked: false,
 };
 

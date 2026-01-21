@@ -1,7 +1,10 @@
 import { Ball } from "../physics/ball";
+import { Vec } from "../physics/vec";
 
-export interface Pocket extends Ball {
+export interface Pocket {
   pocket: true;
+  p: Vec;
+  r: number;
 
   explode?: number;
 
