@@ -8,12 +8,13 @@ import {
   playCueHurt,
   playgoblinHurt,
   playlost,
+  playScratch,
   playswing,
   playvictory,
 } from "../../sounds/audio";
 import { Hero } from "../types/hero";
 import { Monster } from "../types/monster";
-import { isAiming, isAttacking } from "../types/turn";
+import { isAiming, isAttacking, TurnStage } from "../types/turn";
 import { damage, isAlive, isDead } from "../types/hp";
 import { at, magnitude, vec } from "../physics/vec";
 import { particle } from "../levels/particle";
@@ -27,12 +28,13 @@ export function useMoveLevel(initial: Level) {
     if (!anythingMoving(level)) return;
 
     let valid = true;
-    requestAnimationFrame(() => {
+    // YUCK this sucks when deployed for some reason.
+    setTimeout(() => {
       if (!valid) return;
       if (!anythingMoving(level)) {
         // wait was something going to go here?
       } else setLevel(tickLevel);
-    });
+    }, 5);
     return () => void (valid = false);
   }, [moving, level, setLevel]);
 
@@ -103,10 +105,11 @@ function tickLevel(level: Level): Level {
       hero.v = vec();
       hero.a = vec();
       hero.p = vec(table.width / 2, table.height / 2);
-      playBallDrop();
+      playScratch();
 
       // if you SCRATCH, you DON'T get another turn though!
       hero.scratched = true;
+      if (isAttacking(hero)) hero.turn = TurnStage.resolve;
     }
 
     for (const monster of monsters) {
