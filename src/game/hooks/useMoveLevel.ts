@@ -1,7 +1,7 @@
 import React from "react";
 import { collide, move } from "../physics/ball";
 import { anythingMoving, Level } from "../levels/level";
-import { playBallHit, playgoblinHurt } from "../../sounds/audio";
+import { playBallHit, playCueHurt, playgoblinHurt } from "../../sounds/audio";
 import { Hero } from "../types/hero";
 import { Monster } from "../types/monster";
 import { isAiming, isAttacking } from "../types/turn";
@@ -48,6 +48,7 @@ function tickLevel(level: Level): Level {
     move(monster);
     const hit = collide(hero, monster);
     if (hit && isAttacking(hero)) heroAttack(hero, monster);
+    if (hit && isAttacking(monster)) monsterAttack(hero, monster);
     else if (hit) playBallHit();
 
     if (hit) console.log(round(magnitude(hero.v)), round(magnitude(hero.a)));
@@ -75,4 +76,9 @@ function tickLevel(level: Level): Level {
 function heroAttack(hero: Hero, monster: Monster) {
   damage(monster.h, hero.attack);
   playgoblinHurt();
+}
+
+function monsterAttack(hero: Hero, monster: Monster) {
+  damage(hero.h, monster.attack);
+  playCueHurt();
 }

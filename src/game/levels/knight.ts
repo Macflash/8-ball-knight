@@ -1,9 +1,7 @@
-import { width } from "../../balls";
 import { Hero } from "../types/hero";
 import { hp } from "../types/hp";
 import { imgs } from "../../images/cue/def";
 import { ball } from "../physics/ball";
-import { vec } from "../physics/vec";
 import { hero_sounds } from "../../sounds/audio";
 
 // TODO: maybe only take like 1HP damage and lose a turn if you scratch

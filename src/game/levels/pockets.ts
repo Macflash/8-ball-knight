@@ -1,10 +1,12 @@
-import { width, height, BALL_RADIUS } from "../../balls";
 import { Pocket } from "../types/pocket";
 import { explosionPng, rockPng } from "../../images/misc";
 import { vec } from "../physics/vec";
 import { pocketMp3 } from "../../sounds/audio";
+import { Table } from "../physics/table";
 
 // TODO: don't hard code these widths/heights, isntead allow multiple table sizes & configurations.
+
+const pocketRadius = 40;
 
 const pocket: Pocket = {
   pocket: true,
@@ -16,30 +18,30 @@ const pocket: Pocket = {
     pocket: pocketMp3,
   },
   p: vec(),
-  r: BALL_RADIUS,
+  r: pocketRadius,
   blocked: false,
 };
 
-export const pockets = () => [
+export const pockets = (table: Table) => [
   // Pockets
   { ...pocket, x: 0, y: 0 },
-  { ...pocket, x: width, y: 0 },
+  { ...pocket, x: table.width, y: 0 },
   {
     ...pocket,
-    x: -0.75 * BALL_RADIUS,
-    y: 0.5 * height + 0.25 * BALL_RADIUS,
+    x: -0.75 * pocketRadius,
+    y: 0.5 * table.height + 0.25 * pocketRadius,
   },
   {
     ...pocket,
-    x: width + 0.75 * BALL_RADIUS,
-    y: 0.5 * height + 0.25 * BALL_RADIUS,
+    x: table.width + 0.75 * pocketRadius,
+    y: 0.5 * table.height + 0.25 * pocketRadius,
   },
-  { ...pocket, x: 0, y: height },
-  { ...pocket, x: width, y: height },
+  { ...pocket, x: 0, y: table.height },
+  { ...pocket, x: table.width, y: table.height },
 ];
 
-export function blockPockets(indices: number[]) {
-  const p = pockets();
+export function blockPockets(table: Table, indices: number[]) {
+  const p = pockets(table);
   for (const i of indices) {
     p[i].blocked = true;
   }

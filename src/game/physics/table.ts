@@ -10,7 +10,10 @@ export class Table {
 
   private readonly bounce = -0.95;
 
-  constructor(readonly width: number, readonly height: number) {}
+  constructor(
+    readonly width: number,
+    readonly height: number,
+  ) {}
 
   private reduceVec(v: Vec, f = this.friction): Vec {
     const mag = magnitude(v);

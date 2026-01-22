@@ -1,8 +1,6 @@
 import "./App.css";
 import React from "react";
-import { height, width, angleFromAtoB } from "./balls";
 import { playBallDrop, playCueTurn, playgoblinTurn } from "./sounds/audio";
-import { isAlive, isDead } from "./game/types/hp";
 import { isAiming, TurnStage } from "./game/types/turn";
 import { tablePng } from "./images/misc";
 import { useMoveLevel } from "./game/hooks/useMoveLevel";
@@ -11,7 +9,7 @@ import { MonsterEl } from "./components/monster";
 import { getLevel } from "./game/levels/level_defs";
 import { useActiveMonster } from "./game/hooks/useEnemyTurn";
 import { useHeroTurn } from "./game/hooks/useHeroTurn";
-import { fromCueAngle, scale } from "./game/physics/vec";
+import { add, angleFromAtoB, fromCueAngle, scale } from "./game/physics/vec";
 import { getLevelState } from "./game/levels/level";
 import { PocketEl } from "./components/pocket";
 
@@ -35,18 +33,24 @@ function App() {
 
   // TODO: Let you keep shooting if you pocket an enemy!
   const shoot = React.useCallback(
-    (roll = 0) => {
+    (roll = 0, side = 0) => {
       if (!isAiming(hero)) return;
 
       // shoot the cue ball
       hero.v = fromCueAngle(hero.aimDirection, hero.maxSpeed);
-      hero.a = scale(hero.v, roll);
+      if (roll) hero.a = scale(hero.v, roll);
+      if (side) {
+        hero.a = add(
+          hero.a,
+          fromCueAngle(hero.aimDirection + side * 90, hero.maxSpeed * 2),
+        );
+      }
       hero.turn = TurnStage.attack;
 
       setLevel({ ...level });
       playBallDrop();
     },
-    [level, setLevel]
+    [level, setLevel],
   );
 
   return (
@@ -75,22 +79,24 @@ function App() {
         const degrees = (angle * 180) / Math.PI;
         setDir(degrees + 90);
       }}
-      onMouseDown={() => shoot()}
+      onMouseDown={() => shoot(0.5)}
       onKeyDown={(e) => {
         if (moving) return;
         if (!hero.turn) return;
 
         // console.log("key", e.key, dir);
         if (e.key === "ArrowLeft" || e.key === "a") {
-          setDir(dir + 3);
+          shoot(0, -1);
+          // setDir(dir + 3);
         }
 
         if (e.key === "ArrowRight" || e.key === "d") {
-          setDir(dir - 3);
+          shoot(0, 1);
+          // setDir(dir - 3);
         }
 
         if (e.key == "ArrowUp" || e.key == "w") {
-          shoot(1);
+          shoot(1.5);
         }
 
         if (e.key == "Space") {
@@ -109,8 +115,8 @@ function App() {
           marginLeft: 13,
           // border: "1px solid green",
           position: "absolute",
-          width,
-          height,
+          width: level.table.width,
+          height: level.table.height,
           marginBottom: 32,
         }}
       >
