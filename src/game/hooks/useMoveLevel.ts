@@ -126,7 +126,7 @@ function tickLevel(level: Level): Level {
 
     const post = getLevelState(level);
     if (post.won !== won) playvictory();
-    else if (post.lost !== lost) playlost();
+    if (post.lost !== lost) playlost();
   }
 
   // Bound and slow the hero and monsters (and anything else moving!!)
