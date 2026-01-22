@@ -15,7 +15,8 @@ export function MonsterEl({
   return (
     <BallEl
       ball={monster}
-      background={isAlive(monster) && monster.turn ? "red" : undefined}
+      background={isAlive(monster) ? "darkgreen" : undefined}
+      glow={isAlive(monster) && monster.turn ? "red" : undefined}
     >
       {isAlive(monster) ? <StatusEl {...monster} /> : undefined}
       <MonsterImage monster={monster} lost={lost} />

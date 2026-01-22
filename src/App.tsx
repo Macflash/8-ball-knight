@@ -130,6 +130,7 @@ function App() {
         style={{
           marginLeft: 13,
           // border: "1px solid green",
+          background: "green",
           position: "absolute",
           width: level.table.width,
           height: level.table.height,

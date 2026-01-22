@@ -19,7 +19,8 @@ export function HeroEl({
     <BallEl
       ball={hero}
       id="game-cue"
-      background={isAlive(hero) && hero.turn ? "yellow" : undefined}
+      background={isAlive(hero) ? "white" : undefined}
+      glow={isAlive(hero) && hero.turn ? "yellow" : undefined}
     >
       {isAlive(hero) ? <StatusEl {...hero} /> : null}
       {isAlive(hero) && !won ? <CueStick hero={hero} aimDir={aimDir} /> : null}
