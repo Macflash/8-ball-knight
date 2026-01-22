@@ -37,8 +37,8 @@ export const pockets = (table: Table) => [
       0.5 * table.height + 0.25 * pocketRadius,
     ),
   },
-  { ...pocket, p: vec(0, table.height + 5) },
-  { ...pocket, p: vec(table.width, table.height + 5) },
+  { ...pocket, p: vec(0, table.height + 10) },
+  { ...pocket, p: vec(table.width, table.height + 10) },
 ];
 
 export function blockPockets(table: Table, indices: number[]) {

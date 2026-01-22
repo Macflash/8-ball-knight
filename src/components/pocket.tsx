@@ -5,12 +5,12 @@ import { explosionPng } from "../images/misc";
 
 export function PocketEl({ pocket }: { pocket: Pocket }) {
   return (
-    <BallEl ball={pocket} background="rgba(0,0,0,.3)">
+    <BallEl ball={pocket}>
       {pocket.pocket && pocket.blocked ? (
         <img
           style={{ marginTop: -0.1 * pocket.r }}
           src={pocket.images.blocked}
-          height={pocket.r * 2.5}
+          height={pocket.r * 3}
         ></img>
       ) : undefined}
 
