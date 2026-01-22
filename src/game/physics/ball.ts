@@ -44,8 +44,10 @@ export function move(ball: Ball) {
   if (ball.v) ball.p = add(ball.p, ball.v);
 }
 
-export function isMoving(ball: Ball) {
-  return magnitude(ball.v) > 0;
+export function isMoving({ v, a }: { v: Vec; a?: Vec }) {
+  if (v.x != 0 || v.y != 0) return true;
+  if (!a) return false;
+  return a.x != 0 || a.y != 0;
 }
 
 export function intersect(
@@ -98,6 +100,6 @@ function swapVelocities(a: Ball, b: Ball, n = normal(a.p, b.p)) {
   const totalMass = a.m + b.m;
   const velUpdate = scale(n, (velAlongNormal * 2) / totalMass);
   // swap the vel components according to their mass
-  a.v = subtract(a.v, scale(velUpdate, a.m));
-  b.v = add(b.v, scale(velUpdate, b.m));
+  a.v = subtract(a.v, scale(velUpdate, b.m));
+  b.v = add(b.v, scale(velUpdate, a.m));
 }

@@ -21,9 +21,11 @@ export interface Level {
   particles: Particle[];
 }
 
-export function anythingMoving({ hero, monsters }: Level): boolean {
+export function anythingMoving({ hero, monsters, particles }: Level): boolean {
   if (isMoving(hero)) return true;
-  return monsters.some(isMoving);
+  if (monsters.some(isMoving)) return true;
+  if (particles.some(isMoving)) return true;
+  return false;
 }
 
 export function getLevelState(level: Level) {

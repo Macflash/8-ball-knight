@@ -2,7 +2,7 @@ import "./App.css";
 import React from "react";
 import { playBallDrop, playCueTurn, playgoblinTurn } from "./sounds/audio";
 import { isAiming, TurnStage } from "./game/types/turn";
-import { tablePng } from "./images/misc";
+import { rockPng, tablePng } from "./images/misc";
 import { useMoveLevel } from "./game/hooks/useMoveLevel";
 import { HeroEl } from "./components/hero";
 import { MonsterEl } from "./components/monster";
@@ -19,6 +19,7 @@ import {
 import { getLevelState } from "./game/levels/level";
 import { PocketEl } from "./components/pocket";
 import { ParticleEl } from "./components/particle";
+import { particle } from "./game/levels/particle";
 
 function App() {
   const [levelNum, setLevelNum] = React.useState(1);
@@ -77,6 +78,7 @@ function App() {
       }}
       onMouseDown={() => shoot(0.5)}
       onKeyDown={(e) => {
+        console.log(e.key);
         if (moving) return;
         if (!hero.turn) return;
 
@@ -95,12 +97,30 @@ function App() {
           shoot(1.5);
         }
 
-        if (e.key == "Space") {
-          shoot(0);
-        }
-
         if (e.key == "ArrowDown" || e.key == "s") {
           shoot(-0.5);
+        }
+
+        if (e.key == "Space" || e.key == " ") {
+          console.log("SPACE!");
+          if (isAiming(hero)) {
+            console.log("ARROW!");
+            const p = particle({
+              image: rockPng,
+              r: 10,
+              m: 10,
+              v: fromCueAngle(aimDir, 3),
+              p: hero.p,
+              collide: true,
+              lifespan: 1_000,
+            });
+            level.particles.push(p);
+
+            hero.turn = TurnStage.attack;
+
+            setLevel({ ...level });
+            playBallDrop();
+          }
         }
       }}
     >

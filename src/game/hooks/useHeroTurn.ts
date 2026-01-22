@@ -13,16 +13,16 @@ export function useHeroTurn(level: Level, setLevel: (level: Level) => void) {
 
     // Do we really need "resolve" stage right now?
     if (hero.turn == TurnStage.attack || hero.turn == TurnStage.resolve) {
-      if (hero.scratched) hero.scratched = false;
-      else if (hero.pocketedEnemy) {
+      // Go again!
+      if (hero.pocketedEnemy && !hero.scratched) {
         hero.turn = TurnStage.aim;
-        setLevel({ ...level });
-        return;
+      } else {
+        hero.turn = TurnStage.inactive;
       }
 
-      hero.turn = TurnStage.inactive;
+      hero.scratched = false;
+      hero.pocketedEnemy = false;
       setLevel({ ...level });
-      return;
     }
   }, [moving, hero.turn]);
 
