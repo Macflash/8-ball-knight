@@ -6,7 +6,7 @@ import { Table } from "../physics/table";
 
 // TODO: don't hard code these widths/heights, isntead allow multiple table sizes & configurations.
 
-const pocketRadius = 40;
+const pocketRadius = 35;
 
 const pocket: Pocket = {
   pocket: true,
@@ -24,20 +24,21 @@ const pocket: Pocket = {
 
 export const pockets = (table: Table) => [
   // Pockets
-  { ...pocket, x: 0, y: 0 },
-  { ...pocket, x: table.width, y: 0 },
+  { ...pocket, p: vec(0, -5) },
+  { ...pocket, p: vec(table.width, -5) },
   {
     ...pocket,
-    x: -0.75 * pocketRadius,
-    y: 0.5 * table.height + 0.25 * pocketRadius,
+    p: vec(-0.75 * pocketRadius, 0.5 * table.height + 0.25 * pocketRadius),
   },
   {
     ...pocket,
-    x: table.width + 0.75 * pocketRadius,
-    y: 0.5 * table.height + 0.25 * pocketRadius,
+    p: vec(
+      table.width + 0.75 * pocketRadius,
+      0.5 * table.height + 0.25 * pocketRadius,
+    ),
   },
-  { ...pocket, x: 0, y: table.height },
-  { ...pocket, x: table.width, y: table.height },
+  { ...pocket, p: vec(0, table.height + 5) },
+  { ...pocket, p: vec(table.width, table.height + 5) },
 ];
 
 export function blockPockets(table: Table, indices: number[]) {

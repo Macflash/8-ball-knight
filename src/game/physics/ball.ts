@@ -48,12 +48,21 @@ export function isMoving(ball: Ball) {
   return magnitude(ball.v) > 0;
 }
 
+export function intersect(
+  a: { p: Vec; r: number },
+  b: { p: Vec; r: number },
+): boolean {
+  const d = distance(a.p, b.p);
+  const overlap = a.r + b.r - d;
+  return overlap >= 0;
+}
+
 /** Collides 2 balls, updating their velocities and position accordingly */
 export function collide(
   a: Ball,
   b: Ball,
   updatePosition = true,
-  updateVelocities = true
+  updateVelocities = true,
 ): boolean {
   const d = distance(a.p, b.p);
   const overlap = a.r + b.r - d;
@@ -70,7 +79,7 @@ function undoOverlap(
   a: Ball,
   b: Ball,
   overlap = a.r + b.r - distance(a.p, b.p),
-  n = normal(a.p, b.p)
+  n = normal(a.p, b.p),
 ) {
   const offset = scale(n, overlap / (a.m + b.m));
 

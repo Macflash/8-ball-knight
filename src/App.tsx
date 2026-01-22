@@ -14,7 +14,7 @@ import { getLevelState } from "./game/levels/level";
 import { PocketEl } from "./components/pocket";
 
 function App() {
-  const [levelNum, setLevelNum] = React.useState(0);
+  const [levelNum, setLevelNum] = React.useState(1);
   const { level, setLevel, moving } = useMoveLevel(getLevel(levelNum));
 
   const { hero } = useHeroTurn(level, setLevel);

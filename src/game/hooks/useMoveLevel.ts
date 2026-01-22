@@ -1,12 +1,17 @@
 import React from "react";
-import { collide, move } from "../physics/ball";
-import { anythingMoving, Level } from "../levels/level";
-import { playBallHit, playCueHurt, playgoblinHurt } from "../../sounds/audio";
+import { collide, intersect, move } from "../physics/ball";
+import { anythingMoving, getLevelState, Level } from "../levels/level";
+import {
+  playBallDrop,
+  playBallHit,
+  playCueHurt,
+  playgoblinHurt,
+} from "../../sounds/audio";
 import { Hero } from "../types/hero";
 import { Monster } from "../types/monster";
 import { isAiming, isAttacking } from "../types/turn";
 import { damage, isAlive, isDead } from "../types/hp";
-import { magnitude } from "../physics/vec";
+import { magnitude, vec } from "../physics/vec";
 
 export function useMoveLevel(initial: Level) {
   const [level, setLevel] = React.useState(initial);
@@ -38,7 +43,8 @@ function round(n: number, x: number = 10) {
 }
 
 function tickLevel(level: Level): Level {
-  const { hero, table, monsters } = level;
+  const { hero, table, monsters, pockets } = level;
+  const { won, lost } = getLevelState(level);
 
   // Move the hero
   if (isAlive(hero)) move(hero);
@@ -68,6 +74,36 @@ function tickLevel(level: Level): Level {
       if (isDead(monsters[j])) continue;
       const hit = collide(monsters[i], monsters[j]);
       if (hit) playBallHit();
+    }
+  }
+
+  // pockets
+  for (const pocket of pockets) {
+    if (won || lost) continue;
+    if (pocket.blocked) continue;
+    if (isDead(hero)) continue;
+    if (intersect(pocket, hero)) {
+      damage(hero.h, 1);
+      hero.v = vec();
+      hero.a = vec();
+      hero.p = vec(table.width / 2, table.height / 2);
+      playBallDrop();
+
+      // if you SCRATCH, you DON'T get another turn though!
+      hero.scratched = true;
+    }
+
+    for (const monster of monsters) {
+      if (isDead(monster)) continue;
+      if (intersect(pocket, monster)) {
+        monster.h.p = 0;
+        playBallDrop();
+
+        // If it is the HERO's turn, they get to keep going!
+        if (isAttacking(hero)) {
+          hero.pocketedEnemy = true;
+        }
+      }
     }
   }
 

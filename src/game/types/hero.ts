@@ -16,6 +16,9 @@ export interface Hero extends Ball {
   aimDirection: number;
 
   turn?: TurnStage;
+
+  scratched?: boolean;
+  pocketedEnemy?: boolean;
 }
 
 export interface HeroImages {
