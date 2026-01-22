@@ -14,7 +14,7 @@ export function HeroEl({ hero, won }: { hero: Hero; won?: boolean }) {
       background={isAlive(hero) && hero.turn ? "yellow" : undefined}
     >
       {isAlive(hero) ? <StatusEl {...hero} /> : null}
-      {isAlive(hero) ? <CueStick {...hero} /> : null}
+      {isAlive(hero) && !won ? <CueStick {...hero} /> : null}
       <HeroImage hero={hero} won={won} />
     </BallEl>
   );

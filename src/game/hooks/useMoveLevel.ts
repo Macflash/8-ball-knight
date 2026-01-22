@@ -4,8 +4,12 @@ import { anythingMoving, getLevelState, Level } from "../levels/level";
 import {
   playBallDrop,
   playBallHit,
+  playboom,
   playCueHurt,
   playgoblinHurt,
+  playlost,
+  playswing,
+  playvictory,
 } from "../../sounds/audio";
 import { Hero } from "../types/hero";
 import { Monster } from "../types/monster";
@@ -65,9 +69,11 @@ function tickLevel(level: Level): Level {
     else playBallHit();
 
     if (isDead(hero)) {
+      playboom();
       level.particles.push(particle({ p: at(hero.p) }));
       continue;
     } else if (isDead(monster)) {
+      playboom();
       level.particles.push(particle({ p: at(monster.p) }));
       continue;
     }
@@ -106,6 +112,7 @@ function tickLevel(level: Level): Level {
     for (const monster of monsters) {
       if (isDead(monster)) continue;
       if (intersect(pocket, monster)) {
+        playboom();
         level.particles.push(particle({ p: at(pocket.p) }));
         monster.h.p = 0;
         playBallDrop();
@@ -116,6 +123,10 @@ function tickLevel(level: Level): Level {
         }
       }
     }
+
+    const post = getLevelState(level);
+    if (post.won !== won) playvictory();
+    else if (post.lost !== lost) playlost();
   }
 
   // Bound and slow the hero and monsters (and anything else moving!!)
@@ -129,10 +140,13 @@ function tickLevel(level: Level): Level {
 
 function heroAttack(hero: Hero, monster: Monster) {
   damage(monster.h, hero.attack);
+  if (isDead(monster)) return;
+  playswing();
   playgoblinHurt();
 }
 
 function monsterAttack(hero: Hero, monster: Monster) {
   damage(hero.h, monster.attack);
+  if (isDead(hero)) return;
   playCueHurt();
 }

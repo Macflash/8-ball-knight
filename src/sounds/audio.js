@@ -13,6 +13,12 @@ import goblinhurt from "./goblinhurt.mp3";
 import orcturn from "./orcturn.mp3";
 import orchurt from "./orchurt.mp3";
 
+import boom from "./boom.mp3";
+import schwing from "./swing.mp3";
+
+import victory from "./victory.mp3";
+import lost from "./lost.mp3";
+
 export const pocketMp3 = pocket;
 
 export const hero_sounds = {
@@ -85,4 +91,18 @@ export function playorcTurn() {
 }
 export function playorcHurt() {
   play(orchurt);
+}
+
+export function playboom() {
+  play(boom);
+}
+export function playswing() {
+  play(schwing);
+}
+
+export function playvictory() {
+  play(victory);
+}
+export function playlost() {
+  play(lost);
 }
