@@ -4,6 +4,7 @@ import { Hero } from "../types/hero";
 import { isAlive, isDead } from "../types/hp";
 import { Monster } from "../types/monster";
 import { Pocket } from "../types/pocket";
+import { Particle } from "./particle";
 
 /** Represents everything in a playable level. */
 export interface Level {
@@ -16,6 +17,8 @@ export interface Level {
 
   table: Table;
   pockets: Pocket[];
+
+  particles: Particle[];
 }
 
 export function anythingMoving({ hero, monsters }: Level): boolean {

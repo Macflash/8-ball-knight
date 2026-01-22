@@ -29,6 +29,10 @@ export function fromCueAngle(dirDegrees: number, speed: number): Vec {
   return vec(speed * Math.cos(radians), -speed * Math.sin(radians));
 }
 
+export function at(v: Vec): Vec {
+  return { ...v };
+}
+
 /** @returns a new vector (a - b) */
 export function add(a: Vec, b: Vec): Vec {
   return { x: a.x + b.x, y: a.y + b.y };

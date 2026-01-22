@@ -12,6 +12,7 @@ import { useHeroTurn } from "./game/hooks/useHeroTurn";
 import { add, angleFromAtoB, fromCueAngle, scale } from "./game/physics/vec";
 import { getLevelState } from "./game/levels/level";
 import { PocketEl } from "./components/pocket";
+import { ParticleEl } from "./components/particle";
 
 function App() {
   const [levelNum, setLevelNum] = React.useState(1);
@@ -126,6 +127,9 @@ function App() {
         ))}
         {level.pockets.map((pocket, i) => (
           <PocketEl pocket={pocket} key={i} />
+        ))}
+        {level.particles.map((particle, i) => (
+          <ParticleEl particle={particle} key={i} />
         ))}
       </div>
       {won ? (

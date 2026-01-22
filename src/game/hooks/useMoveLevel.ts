@@ -11,7 +11,8 @@ import { Hero } from "../types/hero";
 import { Monster } from "../types/monster";
 import { isAiming, isAttacking } from "../types/turn";
 import { damage, isAlive, isDead } from "../types/hp";
-import { magnitude, vec } from "../physics/vec";
+import { at, magnitude, vec } from "../physics/vec";
+import { particle } from "../levels/particle";
 
 export function useMoveLevel(initial: Level) {
   const [level, setLevel] = React.useState(initial);
@@ -43,8 +44,10 @@ function round(n: number, x: number = 10) {
 }
 
 function tickLevel(level: Level): Level {
-  const { hero, table, monsters, pockets } = level;
+  const { hero, table, monsters, pockets, particles } = level;
   const { won, lost } = getLevelState(level);
+
+  level.particles = particles.filter((p) => --p.lifespan > 0);
 
   // Move the hero
   if (isAlive(hero)) move(hero);
@@ -61,7 +64,13 @@ function tickLevel(level: Level): Level {
     else if (isAttacking(monster)) monsterAttack(hero, monster);
     else playBallHit();
 
-    if (isDead(hero) || isDead(monster)) continue;
+    if (isDead(hero)) {
+      level.particles.push(particle({ p: at(hero.p) }));
+      continue;
+    } else if (isDead(monster)) {
+      level.particles.push(particle({ p: at(monster.p) }));
+      continue;
+    }
 
     collide(hero, monster); // Do the overlap/velocity stuff.
     console.log(round(magnitude(hero.v)), round(magnitude(hero.a)));
@@ -83,6 +92,7 @@ function tickLevel(level: Level): Level {
     if (pocket.blocked) continue;
     if (isDead(hero)) continue;
     if (intersect(pocket, hero)) {
+      level.particles.push(particle({ p: at(pocket.p) }));
       damage(hero.h, 1);
       hero.v = vec();
       hero.a = vec();
@@ -96,6 +106,7 @@ function tickLevel(level: Level): Level {
     for (const monster of monsters) {
       if (isDead(monster)) continue;
       if (intersect(pocket, monster)) {
+        level.particles.push(particle({ p: at(pocket.p) }));
         monster.h.p = 0;
         playBallDrop();
 

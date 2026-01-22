@@ -16,6 +16,7 @@ export function getLevel(n: number): Level {
 
     monsters: monsters[n]?.() || [],
     pockets: pockets[n]?.() || [],
+    particles: [],
   };
 }
 
