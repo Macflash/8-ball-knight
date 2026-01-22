@@ -120,9 +120,9 @@ function App() {
           marginBottom: 32,
         }}
       >
-        <HeroEl hero={level.hero} />
+        <HeroEl hero={level.hero} won={won} />
         {level.monsters.map((m, i) => (
-          <MonsterEl key={i} monster={m} />
+          <MonsterEl key={i} monster={m} lost={lost} />
         ))}
         {level.pockets.map((pocket, i) => (
           <PocketEl pocket={pocket} key={i} />

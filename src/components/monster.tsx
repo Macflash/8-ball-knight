@@ -5,19 +5,25 @@ import { TurnStage } from "../game/types/turn";
 import { StatusEl } from "./status";
 import { Monster } from "../game/types/monster";
 
-export function MonsterEl({ monster }: { monster: Monster }) {
+export function MonsterEl({
+  monster,
+  lost,
+}: {
+  monster: Monster;
+  lost?: boolean;
+}) {
   return (
     <BallEl
       ball={monster}
       background={isAlive(monster) && monster.turn ? "red" : undefined}
     >
       {isAlive(monster) ? <StatusEl {...monster} /> : undefined}
-      <MonsterImage monster={monster} />
+      <MonsterImage monster={monster} lost={lost} />
     </BallEl>
   );
 }
 
-function MonsterImage({ monster }: { monster: Monster }) {
+function MonsterImage({ monster, lost }: { monster: Monster; lost?: boolean }) {
   if (isDead(monster)) return null;
 
   const { images } = monster;
@@ -25,6 +31,7 @@ function MonsterImage({ monster }: { monster: Monster }) {
   if (isHurt(monster)) image = images.hurt;
   if (isMoving(monster)) image = images.surprised;
   if (monster.turn == TurnStage.attack) image = images.attack;
+  if (lost) image = images.happy;
 
   return (
     <img

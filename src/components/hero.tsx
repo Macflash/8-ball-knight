@@ -6,21 +6,21 @@ import { TurnStage } from "../game/types/turn";
 import { StatusEl } from "./status";
 import { stickPng } from "../images/misc";
 
-export function HeroEl({ hero }: { hero: Hero }) {
+export function HeroEl({ hero, won }: { hero: Hero; won?: boolean }) {
   return (
     <BallEl
       ball={hero}
       id="game-cue"
       background={isAlive(hero) && hero.turn ? "yellow" : undefined}
     >
-      <StatusEl {...hero} />
-      <CueStick {...hero} />
-      <HeroImage hero={hero} />
+      {isAlive(hero) ? <StatusEl {...hero} /> : null}
+      {isAlive(hero) ? <CueStick {...hero} /> : null}
+      <HeroImage hero={hero} won={won} />
     </BallEl>
   );
 }
 
-function HeroImage({ hero }: { hero: Hero }) {
+function HeroImage({ hero, won }: { hero: Hero; won?: boolean }) {
   if (isDead(hero)) return null;
 
   const { images } = hero;
@@ -28,6 +28,7 @@ function HeroImage({ hero }: { hero: Hero }) {
   if (isHurt(hero)) image = images.hurt;
   if (isMoving(hero)) image = images.surprised;
   if (hero.turn == TurnStage.attack) image = images.attack;
+  if (won) image = images.happy;
 
   return (
     <img

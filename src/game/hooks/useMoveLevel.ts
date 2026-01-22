@@ -11,7 +11,6 @@ import { magnitude } from "../physics/vec";
 export function useMoveLevel(initial: Level) {
   const [level, setLevel] = React.useState(initial);
   const moving = anythingMoving(level);
-  const aiming = isAiming(level.hero);
 
   // Update the level physics while anything is moving.
   React.useEffect(() => {
@@ -21,6 +20,7 @@ export function useMoveLevel(initial: Level) {
     requestAnimationFrame(() => {
       if (!valid) return;
       if (!anythingMoving(level)) {
+        // wait was something going to go here?
       } else setLevel(tickLevel);
     });
     return () => void (valid = false);
@@ -41,17 +41,24 @@ function tickLevel(level: Level): Level {
   const { hero, table, monsters } = level;
 
   // Move the hero
-  move(hero);
+  if (isAlive(hero)) move(hero);
 
   // Move the monsters and check for collisions with the hero
   for (const monster of monsters.filter(isAlive)) {
     move(monster);
-    const hit = collide(hero, monster);
-    if (hit && isAttacking(hero)) heroAttack(hero, monster);
-    if (hit && isAttacking(monster)) monsterAttack(hero, monster);
-    else if (hit) playBallHit();
 
-    if (hit) console.log(round(magnitude(hero.v)), round(magnitude(hero.a)));
+    if (isDead(hero)) continue;
+    const hit = collide(hero, monster, false, false);
+    if (!hit) continue;
+
+    if (isAttacking(hero)) heroAttack(hero, monster);
+    else if (isAttacking(monster)) monsterAttack(hero, monster);
+    else playBallHit();
+
+    if (isDead(hero) || isDead(monster)) continue;
+
+    collide(hero, monster); // Do the overlap/velocity stuff.
+    console.log(round(magnitude(hero.v)), round(magnitude(hero.a)));
   }
 
   // Check for collisions between the monsters
