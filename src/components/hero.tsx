@@ -6,7 +6,15 @@ import { TurnStage } from "../game/types/turn";
 import { StatusEl } from "./status";
 import { stickPng } from "../images/misc";
 
-export function HeroEl({ hero, won }: { hero: Hero; won?: boolean }) {
+export function HeroEl({
+  hero,
+  won,
+  aimDir,
+}: {
+  hero: Hero;
+  won?: boolean;
+  aimDir?: number;
+}) {
   return (
     <BallEl
       ball={hero}
@@ -14,7 +22,7 @@ export function HeroEl({ hero, won }: { hero: Hero; won?: boolean }) {
       background={isAlive(hero) && hero.turn ? "yellow" : undefined}
     >
       {isAlive(hero) ? <StatusEl {...hero} /> : null}
-      {isAlive(hero) && !won ? <CueStick {...hero} /> : null}
+      {isAlive(hero) && !won ? <CueStick hero={hero} aimDir={aimDir} /> : null}
       <HeroImage hero={hero} won={won} />
     </BallEl>
   );
@@ -39,7 +47,13 @@ function HeroImage({ hero, won }: { hero: Hero; won?: boolean }) {
   );
 }
 
-function CueStick({ turn, r, aimDirection }: Hero) {
+function CueStick({
+  hero: { turn, r },
+  aimDir = 0,
+}: {
+  hero: Hero;
+  aimDir?: number;
+}) {
   if (turn !== TurnStage.aim) return null;
   return (
     <img
@@ -47,7 +61,8 @@ function CueStick({ turn, r, aimDirection }: Hero) {
       height={r * 10}
       style={{
         position: "absolute",
-        transform: `rotate(${aimDirection - 41}deg) 
+        // Compensate for the image
+        transform: `rotate(${aimDir - 41}deg)
                     translate(-${4.15 * r}px, ${5 * r}px)`,
         zIndex: 2,
       }}

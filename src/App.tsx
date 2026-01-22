@@ -9,7 +9,13 @@ import { MonsterEl } from "./components/monster";
 import { getLevel } from "./game/levels/level_defs";
 import { useActiveMonster } from "./game/hooks/useEnemyTurn";
 import { useHeroTurn } from "./game/hooks/useHeroTurn";
-import { add, angleFromAtoB, fromCueAngle, scale } from "./game/physics/vec";
+import {
+  add,
+  angleFromAtoB,
+  fromCueAngle,
+  scale,
+  vec,
+} from "./game/physics/vec";
 import { getLevelState } from "./game/levels/level";
 import { PocketEl } from "./components/pocket";
 import { ParticleEl } from "./components/particle";
@@ -20,30 +26,21 @@ function App() {
 
   const { hero } = useHeroTurn(level, setLevel);
   const { activeMonster } = useActiveMonster(level, setLevel);
-
   const { won, lost } = getLevelState(level);
 
-  // TBH we could keep this as some separate state...
-  // and pass it to the cuestick. but whatever this works for now?
-  const dir = level.hero.aimDirection;
-  const setDir = (aimDirection: number) => {
-    if (won || lost) return;
-    // OMG this was it. jesus christ.
-    setLevel({ ...level, hero: { ...level.hero, aimDirection } });
-  };
+  const [aimDir, setAimDir] = React.useState(0);
 
-  // TODO: Let you keep shooting if you pocket an enemy!
   const shoot = React.useCallback(
     (roll = 0, side = 0) => {
       if (!isAiming(hero)) return;
 
       // shoot the cue ball
-      hero.v = fromCueAngle(hero.aimDirection, hero.maxSpeed);
+      hero.v = fromCueAngle(aimDir, hero.maxSpeed);
       if (roll) hero.a = scale(hero.v, roll);
       if (side) {
         hero.a = add(
           hero.a,
-          fromCueAngle(hero.aimDirection + side * 90, hero.maxSpeed * 2),
+          fromCueAngle(aimDir + side * 90, hero.maxSpeed * 2),
         );
       }
       hero.turn = TurnStage.attack;
@@ -51,7 +48,7 @@ function App() {
       setLevel({ ...level });
       playBallDrop();
     },
-    [level, setLevel],
+    [level, setLevel, aimDir],
   );
 
   return (
@@ -70,15 +67,13 @@ function App() {
       tabIndex={0}
       ref={() => document.getElementById("the-game")?.focus()}
       onMouseMove={(e) => {
-        const tablePos = document.getElementById("game-table")!;
-        const cuepos = {
-          x: tablePos.offsetLeft + hero.p.x,
-          y: tablePos.offsetTop + hero.p.y,
-        };
-        const m = { x: e.clientX, y: e.clientY };
-        const angle = angleFromAtoB(m, cuepos);
+        const tEl = document.getElementById("game-table")!;
+        const tp = vec(tEl.offsetLeft, tEl.offsetTop);
+        const cuep = add(tp, hero.p);
+        const mousep = vec(e.clientX, e.clientY);
+        const angle = angleFromAtoB(mousep, cuep);
         const degrees = (angle * 180) / Math.PI;
-        setDir(degrees + 90);
+        setAimDir(degrees + 90);
       }}
       onMouseDown={() => shoot(0.5)}
       onKeyDown={(e) => {
@@ -121,7 +116,7 @@ function App() {
           marginBottom: 32,
         }}
       >
-        <HeroEl hero={level.hero} won={won} />
+        <HeroEl hero={level.hero} won={won} aimDir={aimDir} />
         {level.monsters.map((m, i) => (
           <MonsterEl key={i} monster={m} lost={lost} />
         ))}
@@ -141,7 +136,7 @@ function App() {
                 const newLevel = levelNum + 1;
                 setLevelNum(newLevel);
                 setLevel(getLevel(newLevel));
-                setDir(0);
+                setAimDir(0);
               }}
             >
               Next level
@@ -158,7 +153,7 @@ function App() {
             onClick={() => {
               setLevelNum(0);
               setLevel(getLevel(0));
-              setDir(0);
+              setAimDir(0);
             }}
           >
             New game?
