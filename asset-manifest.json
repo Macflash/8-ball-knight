@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/8-ball-knight/static/css/main.0c2b6e3c.css",
-    "main.js": "/8-ball-knight/static/js/main.48839015.js",
+    "main.js": "/8-ball-knight/static/js/main.33dff75f.js",
     "static/js/453.203d2430.chunk.js": "/8-ball-knight/static/js/453.203d2430.chunk.js",
     "static/media/lost.mp3": "/8-ball-knight/static/media/lost.3d3e944ec533630b3516.mp3",
     "static/media/explosion.png": "/8-ball-knight/static/media/explosion.aa3cc1b9e195b504e02b.png",
@@ -23,11 +23,11 @@
     "static/media/ballhit.mp3": "/8-ball-knight/static/media/ballhit.d172983adf21a6f9bf92.mp3",
     "index.html": "/8-ball-knight/index.html",
     "main.0c2b6e3c.css.map": "/8-ball-knight/static/css/main.0c2b6e3c.css.map",
-    "main.48839015.js.map": "/8-ball-knight/static/js/main.48839015.js.map",
+    "main.33dff75f.js.map": "/8-ball-knight/static/js/main.33dff75f.js.map",
     "453.203d2430.chunk.js.map": "/8-ball-knight/static/js/453.203d2430.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0c2b6e3c.css",
-    "static/js/main.48839015.js"
+    "static/js/main.33dff75f.js"
   ]
 }
