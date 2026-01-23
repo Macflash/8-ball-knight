@@ -1,4 +1,5 @@
 import { Ball } from "../physics/ball";
+import { Energy } from "./energy";
 import { HP } from "./hp";
 import { TurnStage } from "./turn";
 
@@ -6,6 +7,7 @@ export interface Hero extends Ball {
   hero: true;
 
   h: HP;
+  e: Energy; // TODO: add attack selection.
 
   attack: number;
   maxSpeed: number;

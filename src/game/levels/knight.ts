@@ -3,6 +3,7 @@ import { hp } from "../types/hp";
 import { imgs } from "../../images/cue/def";
 import { ball } from "../physics/ball";
 import { hero_sounds } from "../../sounds/audio";
+import { energy } from "../types/energy";
 
 // TODO: maybe only take like 1HP damage and lose a turn if you scratch
 // EXCEPT last turn probably? MAYBE just on boss levels as it gets a bit annoying.
@@ -17,9 +18,11 @@ export const Knight: () => Hero = () => ({
   sounds: hero_sounds,
 
   h: hp(5),
+  e: energy(2),
 
   attack: 2,
   maxSpeed: 1.5,
 
   aimDirection: 0,
+  attacks: [],
 });

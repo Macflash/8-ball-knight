@@ -13,7 +13,9 @@ import {
   add,
   angleFromAtoB,
   fromCueAngle,
+  magnitude,
   scale,
+  subtract,
   vec,
 } from "./game/physics/vec";
 import { getLevelState } from "./game/levels/level";
@@ -31,22 +33,23 @@ function App() {
 
   const [aimDir, setAimDir] = React.useState(0);
   const [charge, setCharge] = React.useState(0);
-  const chargeVal = Math.sin((charge - 180) / 180) + 1;
+  const [initialCharge, setInitialCharge] = React.useState(0); // so we always need to... pull back?
+  const chargeVal = Math.sin((charge - 180) / 90) + 1;
   const [isCharging, setIsCharging] = React.useState(false);
 
-  React.useEffect(() => {
-    if (!isCharging) return;
-    let valid = true;
+  // React.useEffect(() => {
+  //   if (!isCharging) return;
+  //   let valid = true;
 
-    // charge could be like... an angle.
-    requestAnimationFrame(() => {
-      if (!valid) return;
-      setCharge((c) => c + 10);
-    });
-    return () => {
-      valid = false;
-    };
-  }, [isCharging, charge, setCharge]);
+  //   // charge could be like... an angle.
+  //   requestAnimationFrame(() => {
+  //     if (!valid) return;
+  //     // setCharge((c) => c + 10);
+  //   });
+  //   return () => {
+  //     valid = false;
+  //   };
+  // }, [isCharging, charge, setCharge]);
 
   const shoot = React.useCallback(
     (roll = 0, side = 0, speed = 1) => {
@@ -68,6 +71,7 @@ function App() {
 
       setIsCharging(false);
       setCharge(0);
+      setInitialCharge(0);
       setLevel({ ...level });
       playBallDrop();
     },
@@ -95,9 +99,18 @@ function App() {
         const tp = vec(tEl.offsetLeft, tEl.offsetTop);
         const cuep = add(tp, hero.p);
         const mousep = vec(e.clientX, e.clientY);
-        const angle = angleFromAtoB(mousep, cuep);
-        const degrees = (angle * 180) / Math.PI;
-        setAimDir(degrees + 90);
+
+        const angleVec = subtract(cuep, mousep);
+
+        const distance = magnitude(angleVec);
+
+        if (isCharging) setCharge(distance - initialCharge);
+        else {
+          const angle = angleFromAtoB(mousep, cuep);
+          const degrees = (angle * 180) / Math.PI;
+          setAimDir(degrees + 90);
+          setInitialCharge(distance);
+        }
       }}
       onMouseDown={() => {
         if (isAiming(hero)) setIsCharging(true);

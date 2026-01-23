@@ -21,9 +21,6 @@ export interface Attack<
     level: Level,
   ): void;
 
+  // This can be a LATER addition
   onHit(attacker: AttackerT, target: TargetT): void;
 }
-
-// export const BasicShot: Attack {
-
-// }
