@@ -30,13 +30,33 @@ function App() {
   const { won, lost } = getLevelState(level);
 
   const [aimDir, setAimDir] = React.useState(0);
+  const [charge, setCharge] = React.useState(0);
+  const chargeVal = Math.sin((charge - 180) / 180) + 1;
+  const [isCharging, setIsCharging] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!isCharging) return;
+    let valid = true;
+
+    // charge could be like... an angle.
+    requestAnimationFrame(() => {
+      if (!valid) return;
+      setCharge((c) => c + 10);
+    });
+    return () => {
+      valid = false;
+    };
+  }, [isCharging, charge, setCharge]);
 
   const shoot = React.useCallback(
     (roll = 0, side = 0, speed = 1) => {
       if (!isAiming(hero)) return;
 
+      // a number between 0 and 2?
+      console.log(chargeVal);
+
       // shoot the cue ball
-      hero.v = fromCueAngle(aimDir, hero.maxSpeed * speed);
+      hero.v = fromCueAngle(aimDir, hero.maxSpeed * (chargeVal + 0.25));
       if (roll) hero.a = scale(hero.v, roll);
       if (side) {
         hero.a = add(
@@ -46,10 +66,12 @@ function App() {
       }
       hero.turn = TurnStage.attack;
 
+      setIsCharging(false);
+      setCharge(0);
       setLevel({ ...level });
       playBallDrop();
     },
-    [level, setLevel, aimDir],
+    [level, setLevel, aimDir, chargeVal],
   );
 
   return (
@@ -68,6 +90,7 @@ function App() {
       tabIndex={0}
       ref={() => document.getElementById("the-game")?.focus()}
       onMouseMove={(e) => {
+        // e.target // is this NOT the table? NO ITS NOT. this is the whole window.
         const tEl = document.getElementById("game-table")!;
         const tp = vec(tEl.offsetLeft, tEl.offsetTop);
         const cuep = add(tp, hero.p);
@@ -76,8 +99,18 @@ function App() {
         const degrees = (angle * 180) / Math.PI;
         setAimDir(degrees + 90);
       }}
-      onMouseDown={() => shoot(0.5)}
+      onMouseDown={() => {
+        if (isAiming(hero)) setIsCharging(true);
+      }}
+      onMouseUp={() => {
+        if (isAiming(hero) && isCharging) {
+          shoot(1);
+        }
+      }}
       onKeyDown={(e) => {
+        if (isAiming(hero)) setIsCharging(true);
+      }}
+      onKeyUp={(e) => {
         console.log(e.key);
         if (moving) return;
         if (!hero.turn) return;
@@ -137,7 +170,12 @@ function App() {
           marginBottom: 32,
         }}
       >
-        <HeroEl hero={level.hero} won={won} aimDir={aimDir} />
+        <HeroEl
+          hero={level.hero}
+          won={won}
+          aimDir={aimDir}
+          charge={chargeVal}
+        />
         {level.monsters.map((m, i) => (
           <MonsterEl key={i} monster={m} lost={lost} />
         ))}

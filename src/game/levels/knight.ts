@@ -19,7 +19,7 @@ export const Knight: () => Hero = () => ({
   h: hp(5),
 
   attack: 2,
-  maxSpeed: 2,
+  maxSpeed: 1.5,
 
   aimDirection: 0,
 });

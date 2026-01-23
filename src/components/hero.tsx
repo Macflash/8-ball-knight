@@ -10,10 +10,12 @@ export function HeroEl({
   hero,
   won,
   aimDir,
+  charge,
 }: {
   hero: Hero;
   won?: boolean;
   aimDir?: number;
+  charge?: number;
 }) {
   return (
     <BallEl
@@ -23,7 +25,9 @@ export function HeroEl({
       glow={isAlive(hero) && hero.turn ? "yellow" : undefined}
     >
       {isAlive(hero) ? <StatusEl {...hero} /> : null}
-      {isAlive(hero) && !won ? <CueStick hero={hero} aimDir={aimDir} /> : null}
+      {isAlive(hero) && !won ? (
+        <CueStick hero={hero} aimDir={aimDir} charge={charge} />
+      ) : null}
       <HeroImage hero={hero} won={won} />
     </BallEl>
   );
@@ -52,20 +56,23 @@ function HeroImage({ hero, won }: { hero: Hero; won?: boolean }) {
 function CueStick({
   hero: { turn, r },
   aimDir = 0,
+  charge = 0,
 }: {
   hero: Hero;
   aimDir?: number;
+  charge?: number;
 }) {
   if (turn !== TurnStage.aim) return null;
   return (
     <img
+      draggable={false}
       src={stickPng}
       height={r * 10}
       style={{
         position: "absolute",
         // Compensate for the image
         transform: `rotate(${aimDir}deg)
-                    translate(${0 * r}px, ${6 * r}px)`,
+                    translate(${0 * r}px, ${(5.5 + charge) * r}px)`,
         zIndex: 2,
       }}
     />
