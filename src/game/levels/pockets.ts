@@ -1,5 +1,5 @@
 import { Pocket } from "../types/pocket";
-import { explosionPng, rockPng } from "../../images/misc";
+import { explosionPng, rockPng } from "../../images/misc/misc";
 import { vec } from "../physics/vec";
 import { pocketMp3 } from "../../sounds/audio";
 import { Table } from "../physics/table";

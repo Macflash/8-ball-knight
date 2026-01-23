@@ -1,11 +1,11 @@
 import { BallEl } from "./ball";
 import { isAlive } from "../game/types/hp";
 import { Pocket } from "../game/types/pocket";
-import { explosionPng } from "../images/misc";
+import { explosionPng } from "../images/misc/misc";
 
 export function PocketEl({ pocket }: { pocket: Pocket }) {
   return (
-    <BallEl ball={pocket}>
+    <BallEl ball={pocket} background={pocket.blocked ? "" : "black"}>
       {pocket.pocket && pocket.blocked ? (
         <img
           style={{ marginTop: -0.1 * pocket.r }}

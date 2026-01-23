@@ -1,4 +1,4 @@
-import { explosionPng } from "../../images/misc";
+import { explosionPng } from "../../images/misc/misc";
 import { Ball } from "../physics/ball";
 import { vec, Vec } from "../physics/vec";
 

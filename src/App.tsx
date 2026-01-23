@@ -2,7 +2,7 @@ import "./App.css";
 import React from "react";
 import { playBallDrop, playCueTurn, playgoblinTurn } from "./sounds/audio";
 import { isAiming, TurnStage } from "./game/types/turn";
-import { rockPng, tablePng } from "./images/misc";
+import { rockPng, tablePng } from "./images/misc/misc";
 import { useMoveLevel } from "./game/hooks/useMoveLevel";
 import { HeroEl } from "./components/hero";
 import { MonsterEl } from "./components/monster";
@@ -32,11 +32,11 @@ function App() {
   const [aimDir, setAimDir] = React.useState(0);
 
   const shoot = React.useCallback(
-    (roll = 0, side = 0) => {
+    (roll = 0, side = 0, speed = 1) => {
       if (!isAiming(hero)) return;
 
       // shoot the cue ball
-      hero.v = fromCueAngle(aimDir, hero.maxSpeed);
+      hero.v = fromCueAngle(aimDir, hero.maxSpeed * speed);
       if (roll) hero.a = scale(hero.v, roll);
       if (side) {
         hero.a = add(
@@ -98,7 +98,7 @@ function App() {
         }
 
         if (e.key == "ArrowDown" || e.key == "s") {
-          shoot(-0.5);
+          shoot(-1, 0, 1.75);
         }
 
         if (e.key == "Space" || e.key == " ") {
@@ -129,7 +129,7 @@ function App() {
         id="game-table"
         style={{
           marginLeft: 13,
-          // border: "1px solid green",
+          outline: "60px solid brown",
           background: "green",
           position: "absolute",
           width: level.table.width,

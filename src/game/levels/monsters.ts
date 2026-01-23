@@ -23,14 +23,40 @@ export const goblin: () => Monster = () => ({
 });
 
 export const orc: () => Monster = () => ({
-  ...ball(30, 50),
+  ...ball(35, 75),
   monster: true,
 
-  images: orc_imgs,
+  images: goblin_imgs,
   sounds: goblin_sounds,
 
   h: hp(5),
   attack: 2,
+  speed: 0.75,
+  ranged: false,
+});
+
+export const lil: () => Monster = () => ({
+  ...ball(20, 30),
+  monster: true,
+
+  images: goblin_imgs,
+  sounds: goblin_sounds,
+
+  h: hp(2),
+  attack: 1,
+  speed: 0.75,
+  ranged: false,
+});
+
+export const giant: () => Monster = () => ({
+  ...ball(70, 150),
+  monster: true,
+
+  images: goblin_imgs,
+  sounds: goblin_sounds,
+
+  h: hp(7),
+  attack: 3,
   speed: 0.75,
   ranged: false,
 });

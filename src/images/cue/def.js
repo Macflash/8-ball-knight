@@ -4,8 +4,10 @@
 // import hurt from "./hurt.png";
 // import attack from "./attack.png";
 
+import { cuePng } from "../misc/misc";
+
 export const imgs = {
-  normal: "",
+  normal: cuePng,
   happy: "",
   surprised: "",
   hurt: "",

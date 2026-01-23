@@ -1,5 +1,5 @@
 import { BallEl } from "./ball";
-import { explosionPng } from "../images/misc";
+import { explosionPng } from "../images/misc/misc";
 import { Particle } from "../game/levels/particle";
 
 export function ParticleEl({ particle }: { particle: Particle }) {

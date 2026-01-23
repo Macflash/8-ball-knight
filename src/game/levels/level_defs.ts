@@ -3,7 +3,7 @@ import { TurnStage } from "../types/turn";
 import { Table } from "../physics/table";
 import { vec } from "../physics/vec";
 import { Knight } from "./knight";
-import { goblin, orc } from "./monsters";
+import { giant, goblin, lil, orc } from "./monsters";
 import { blockPockets } from "./pockets";
 
 const table = new Table(400, 536);
@@ -22,6 +22,19 @@ export function getLevel(n: number): Level {
 
 const monsters = [
   () => [{ ...orc(), p: vec(table.width / 2, 100) }],
+
+  () => [{ ...orc(), p: vec(table.width / 2, 100) }],
+
+  () => [
+    { ...lil(), p: vec(table.width / 2, 200) },
+    { ...lil(), p: vec(table.width / 3, 150) },
+    { ...lil(), p: vec((table.width * 2) / 3, 150) },
+    { ...lil(), p: vec(table.width / 4, 100) },
+    { ...lil(), p: vec(table.width / 2, 100) },
+    { ...lil(), p: vec((table.width * 3) / 4, 100) },
+  ],
+
+  () => [{ ...giant(), p: vec(table.width / 2, 100) }],
 
   () => [
     { ...goblin(), p: vec(table.width / 3, 100) },

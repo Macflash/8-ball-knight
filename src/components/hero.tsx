@@ -4,7 +4,7 @@ import { isAlive, isDead, isHurt } from "../game/types/hp";
 import { isMoving } from "../game/physics/ball";
 import { TurnStage } from "../game/types/turn";
 import { StatusEl } from "./status";
-import { stickPng } from "../images/misc";
+import { stickPng } from "../images/misc/misc";
 
 export function HeroEl({
   hero,
@@ -38,6 +38,7 @@ function HeroImage({ hero, won }: { hero: Hero; won?: boolean }) {
   if (isMoving(hero)) image = images.surprised;
   if (hero.turn == TurnStage.attack) image = images.attack;
   if (won) image = images.happy;
+  if (!image) image = images.normal;
 
   return (
     <img
@@ -63,8 +64,8 @@ function CueStick({
       style={{
         position: "absolute",
         // Compensate for the image
-        transform: `rotate(${aimDir - 41}deg)
-                    translate(-${4.15 * r}px, ${5 * r}px)`,
+        transform: `rotate(${aimDir}deg)
+                    translate(${0 * r}px, ${6 * r}px)`,
         zIndex: 2,
       }}
     />
