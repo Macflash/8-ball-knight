@@ -1,20 +1,14 @@
 {
   "files": {
     "main.css": "/8-ball-knight/static/css/main.0c2b6e3c.css",
-    "main.js": "/8-ball-knight/static/js/main.0f57796f.js",
+    "main.js": "/8-ball-knight/static/js/main.f2fb41c8.js",
     "static/js/453.203d2430.chunk.js": "/8-ball-knight/static/js/453.203d2430.chunk.js",
-    "static/media/table.png": "/8-ball-knight/static/media/table.a732071089d9970c49e8.png",
-    "static/media/hurt.png": "/8-ball-knight/static/media/hurt.efefd06558777335e491.png",
-    "static/media/attack.png": "/8-ball-knight/static/media/attack.b6f2be66ecbe1e23ed2b.png",
-    "static/media/happy.png": "/8-ball-knight/static/media/happy.e5e431c4679eb2242231.png",
-    "static/media/surprised.png": "/8-ball-knight/static/media/surprised.07cd311bdc3d0b2f7a8d.png",
-    "static/media/normal.png": "/8-ball-knight/static/media/normal.f336938c7b0c4b6f4c8b.png",
-    "static/media/explosion.png": "/8-ball-knight/static/media/explosion.7f0e536b22127c952efc.png",
-    "static/media/rock.png": "/8-ball-knight/static/media/rock.dd1a94c443bd8c573ebb.png",
-    "static/media/stick.png": "/8-ball-knight/static/media/stick.c5d7d9f25369ec636eee.png",
     "static/media/lost.mp3": "/8-ball-knight/static/media/lost.3d3e944ec533630b3516.mp3",
+    "static/media/explosion.png": "/8-ball-knight/static/media/explosion.aa3cc1b9e195b504e02b.png",
     "static/media/victory.mp3": "/8-ball-knight/static/media/victory.e8b68074ea03236ed08d.mp3",
     "static/media/boom.mp3": "/8-ball-knight/static/media/boom.2b6a4bf5cdcdc0c24221.mp3",
+    "static/media/pepper.png": "/8-ball-knight/static/media/pepper.522c598d0da3bcd50901.png",
+    "static/media/cue.png": "/8-ball-knight/static/media/cue.bdc69774af51d99bcd74.png",
     "static/media/pocket2.mp3": "/8-ball-knight/static/media/pocket2.0c38be4966de7f46ee96.mp3",
     "static/media/orchurt.mp3": "/8-ball-knight/static/media/orchurt.c085df430bb11cf30b03.mp3",
     "static/media/goblinhurt.mp3": "/8-ball-knight/static/media/goblinhurt.6135cef8a30121754776.mp3",
@@ -29,11 +23,11 @@
     "static/media/ballhit.mp3": "/8-ball-knight/static/media/ballhit.d172983adf21a6f9bf92.mp3",
     "index.html": "/8-ball-knight/index.html",
     "main.0c2b6e3c.css.map": "/8-ball-knight/static/css/main.0c2b6e3c.css.map",
-    "main.0f57796f.js.map": "/8-ball-knight/static/js/main.0f57796f.js.map",
+    "main.f2fb41c8.js.map": "/8-ball-knight/static/js/main.f2fb41c8.js.map",
     "453.203d2430.chunk.js.map": "/8-ball-knight/static/js/453.203d2430.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.0c2b6e3c.css",
-    "static/js/main.0f57796f.js"
+    "static/js/main.f2fb41c8.js"
   ]
 }
