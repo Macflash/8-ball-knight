@@ -72,7 +72,7 @@ function CueStick({
         position: "absolute",
         // Compensate for the image
         transform: `rotate(${aimDir}deg)
-                    translate(${0 * r}px, ${(5.5 + charge) * r}px)`,
+                    translate(${0 * r}px, ${(5.5 + 2 * charge) * r}px)`,
         zIndex: 2,
       }}
     />

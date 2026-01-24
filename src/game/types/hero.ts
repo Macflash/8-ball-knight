@@ -1,3 +1,4 @@
+import { CueAttack } from "../levels/attack";
 import { Ball } from "../physics/ball";
 import { Energy } from "./energy";
 import { HP } from "./hp";
@@ -16,6 +17,9 @@ export interface Hero extends Ball {
   sounds: HeroSounds;
 
   turn?: TurnStage;
+  activeAttack?: CueAttack;
+
+  knownAttacks: CueAttack[];
 
   scratched?: boolean;
   pocketedEnemy?: boolean;
