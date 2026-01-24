@@ -4,7 +4,14 @@ import { imgs } from "../../images/cue/def";
 import { ball } from "../physics/ball";
 import { hero_sounds } from "../../sounds/audio";
 import { energy } from "../types/energy";
-import { BackSpin, BasicAttack, Charge } from "./attack";
+import {
+  BackSpin,
+  BasicAttack,
+  Charge,
+  ForwardRoll,
+  HookLeft,
+  HookRight,
+} from "./attack";
 
 // TODO: maybe only take like 1HP damage and lose a turn if you scratch
 // EXCEPT last turn probably? MAYBE just on boss levels as it gets a bit annoying.
@@ -26,5 +33,12 @@ export const Knight: () => Hero = () => ({
 
   aimDirection: 0,
 
-  knownAttacks: [BasicAttack, Charge, BackSpin],
+  knownAttacks: [
+    BasicAttack,
+    Charge,
+    BackSpin,
+    HookLeft,
+    HookRight,
+    ForwardRoll,
+  ],
 });

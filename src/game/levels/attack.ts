@@ -50,13 +50,13 @@ export const Charge: CueAttack = {
 export const HookLeft: CueAttack = {
   name: "Left Hook",
   cost: 2,
-  spin: -2,
+  spin: -1,
 };
 
 export const HookRight: CueAttack = {
   name: "Right Hook",
   cost: 2,
-  spin: 2,
+  spin: 1,
 };
 
 export const BackSpin: CueAttack = {
@@ -87,7 +87,10 @@ export function CueShot(
   if (spin) {
     hero.a = add(
       hero.a,
-      fromCueAngle(cueStick.aimDir + Math.sign(spin) * 90, vel * spin),
+      fromCueAngle(
+        cueStick.aimDir + Math.sign(spin) * 90,
+        vel * Math.abs(spin),
+      ),
     );
   }
 }
