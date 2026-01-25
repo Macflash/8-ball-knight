@@ -5,7 +5,7 @@ import {
   playgoblinHurt,
   playswing,
 } from "../../sounds/audio";
-import { getLevelState, Level } from "../levels/level";
+import { Level } from "../levels/level";
 import { particle } from "../levels/particle";
 import { move, collide } from "../physics/ball";
 import { at, magnitude } from "../physics/vec";
@@ -15,21 +15,23 @@ import { Monster } from "../types/monster";
 import { isAttacking } from "../types/turn";
 
 export function tickMonsters(level: Level) {
-  const { hero, table, monsters, pockets, particles } = level;
-  const { won, lost } = getLevelState(level);
+  const { hero, monsters } = level;
 
   // Move the monsters and check for collisions with the hero
   for (const monster of monsters.filter(isAlive)) {
     move(monster);
 
     if (isDead(hero)) continue;
+
     const hit = collide(hero, monster, false, false);
     if (!hit) continue;
 
+    // Do attack stuff on hit
     if (isAttacking(hero)) heroAttack(hero, monster);
     else if (isAttacking(monster)) monsterAttack(hero, monster);
     else playBallHit();
 
+    // Check if the attacks killed either of 'em
     if (isDead(hero)) {
       playboom();
       level.particles.push(particle({ p: at(hero.p) }));
@@ -40,8 +42,8 @@ export function tickMonsters(level: Level) {
       continue;
     }
 
-    collide(hero, monster); // Do the overlap/velocity stuff.
-    console.log(round(magnitude(hero.v)), round(magnitude(hero.a)));
+    // Do the overlap/velocity stuff.
+    collide(hero, monster);
   }
 
   // Check for collisions between the monsters

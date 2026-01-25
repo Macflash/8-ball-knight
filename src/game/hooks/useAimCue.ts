@@ -1,7 +1,22 @@
 import React from "react";
 import { playBallDrop } from "../../sounds/audio";
-import { fromCueAngle, scale, add, vec, distance, Vec } from "../physics/vec";
+import {
+  fromCueAngle,
+  scale,
+  add,
+  vec,
+  distance,
+  Vec,
+  angleFromAtoB,
+} from "../physics/vec";
 import { isAiming, TurnStage } from "../types/turn";
+import { Hero } from "../types/hero";
+
+export interface StickState {
+  aimDir: number;
+  charge: number;
+  isCharging: boolean;
+}
 
 export function useAimCue() {
   const [aimDir, setAimDir] = React.useState(0);
@@ -30,14 +45,55 @@ export function useAimCue() {
     setRelease(null);
   }, [setIsCharging, setStart, setRelease]);
 
+  // MOUSE MOVE HANDLERS
+
+  const setStartOrRelease = React.useCallback(
+    (mousep: Vec) => {
+      if (isCharging) setRelease(mousep);
+      else setStart(mousep);
+    },
+    [isCharging, setRelease, setStart],
+  );
+
+  const calculateAimDir = React.useCallback(
+    (mousep: Vec, herop: Vec) => {
+      if (isCharging) return; // Keep the same angle while pulling back.
+
+      // UGH, I hate this part but... I guess we need to do it somewhere??
+      const tEl = document.getElementById("game-table")!;
+      const tablep = vec(tEl.offsetLeft, tEl.offsetTop);
+      const cuep = add(tablep, herop);
+      const angle = angleFromAtoB(mousep, cuep);
+      const degrees = (angle * 180) / Math.PI;
+      setAimDir(degrees + 90);
+    },
+    [isCharging, setAimDir],
+  );
+
+  const onMouseMove = React.useCallback(
+    (mousep: Vec, herop: Vec) => {
+      setStartOrRelease(mousep);
+      calculateAimDir(mousep, herop);
+    },
+    [setStartOrRelease, calculateAimDir],
+  );
+
+  // MOUSE/KEY DOWN/UP HANDLERS
+
+  const onMouseDown = React.useCallback(
+    (hero: Hero) => {
+      if (isAiming(hero)) setIsCharging(true);
+    },
+    [setIsCharging],
+  );
+
   return {
     reset,
     aimDir,
     charge,
     isCharging,
-    setIsCharging,
+    onMouseDown,
     setAimDir,
-    setStart,
-    setRelease,
+    onMouseMove,
   };
 }
