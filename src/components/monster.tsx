@@ -4,6 +4,7 @@ import { isMoving } from "../game/physics/ball";
 import { TurnStage } from "../game/types/turn";
 import { StatusEl } from "./status";
 import { Monster } from "../game/types/monster";
+import { ImageEl } from "./image";
 
 export function MonsterEl({
   monster,
@@ -15,7 +16,7 @@ export function MonsterEl({
   return (
     <BallEl
       ball={monster}
-      background={isAlive(monster) ? "darkred" : undefined}
+      // background={isAlive(monster) ? "darkred" : undefined}
       glow={isAlive(monster) && monster.turn ? "red" : undefined}
     >
       {isAlive(monster) ? <StatusEl {...monster} /> : undefined}
@@ -35,11 +36,5 @@ function MonsterImage({ monster, lost }: { monster: Monster; lost?: boolean }) {
   if (lost) image = images.happy;
   if (!image) image = images.normal;
 
-  return (
-    <img
-      style={{ marginTop: -0.1 * monster.r }}
-      src={image}
-      height={monster.r * 2.5}
-    ></img>
-  );
+  return <ImageEl src={image} size={2 * monster.r} />;
 }

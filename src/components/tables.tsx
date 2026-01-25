@@ -26,6 +26,7 @@ export function TableEl({
         width: level.table.width,
         height: level.table.height,
         marginBottom: 32,
+        userSelect: "none",
       }}
     >
       {level.pockets.map((pocket, i) => (

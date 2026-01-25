@@ -15,12 +15,12 @@ export function BallEl({
   glow?: string;
   background?: string;
 }) {
+  const shadow = glow ? `0 0 ${1 * ball.r}px ${1 * ball.r}px ${glow}` : "";
   return (
     <div
       id={id}
       style={{
-        background,
-        boxShadow: glow ? `0 0 ${0.5 * ball.r}px ${glow}` : "",
+        background, //: shadow ? glow : background,
         position: "absolute",
         marginLeft: ball.p.x - ball.r,
         marginTop: ball.p.y - ball.r,
@@ -32,6 +32,18 @@ export function BallEl({
         alignItems: "center",
       }}
     >
+      {glow ? (
+        <div
+          style={{
+            position: "absolute",
+            zIndex: 0,
+            height: 0,
+            width: 0,
+            borderRadius: 2 * ball.r,
+            boxShadow: shadow,
+          }}
+        ></div>
+      ) : undefined}
       {children}
     </div>
   );

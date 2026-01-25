@@ -5,6 +5,7 @@ import { isMoving } from "../game/physics/ball";
 import { TurnStage } from "../game/types/turn";
 import { StatusEl } from "./status";
 import { stickPng } from "../images/misc/misc";
+import { ImageEl } from "./image";
 
 export function HeroEl({
   hero,
@@ -21,7 +22,7 @@ export function HeroEl({
     <BallEl
       ball={hero}
       id="game-cue"
-      background={isAlive(hero) ? "white" : undefined}
+      // background={isAlive(hero) && hero.turn ? "yellow" : undefined}
       glow={isAlive(hero) && hero.turn ? "yellow" : undefined}
     >
       {isAlive(hero) ? <StatusEl {...hero} /> : null}
@@ -44,13 +45,7 @@ function HeroImage({ hero, won }: { hero: Hero; won?: boolean }) {
   if (won) image = images.happy;
   if (!image) image = images.normal;
 
-  return (
-    <img
-      style={{ marginTop: -0.1 * hero.r }}
-      src={image}
-      height={hero.r * 2.5}
-    ></img>
-  );
+  return <ImageEl src={image} size={hero.r * 2} />;
 }
 
 function CueStick({

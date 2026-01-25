@@ -15,6 +15,7 @@ function App() {
   return (
     <div style={{ height: "100%", width: "100%" }}>
       <LevelEl
+        key={levelNum}
         initialLevel={level}
         onTurnEnd={(newLevel) => {
           const { won, lost } = getLevelState(level);
@@ -53,6 +54,7 @@ function App() {
                 const newLevel = levelNum + 1;
                 setLevelNum(newLevel);
                 setLevel(getLevel(newLevel));
+                setwonorlost(0);
               }}
             >
               Next level
@@ -62,13 +64,16 @@ function App() {
       ) : null}
 
       {lost && !won ? (
-        <div style={{ position: "absolute", color: "red", fontSize: 100 }}>
+        <div
+          style={{ position: "absolute", top: 0, color: "red", fontSize: 100 }}
+        >
           GAME OVER!
           <br />
           <button
             onClick={() => {
               setLevelNum(0);
               setLevel(getLevel(0));
+              setwonorlost(0);
             }}
           >
             New game?
